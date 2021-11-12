@@ -84,16 +84,7 @@ for i in range(len(ride_ele)-1):
     elif(angle):
         a=3
 
-
     
-
-
-
-
-
-
-
-
 
 
 
