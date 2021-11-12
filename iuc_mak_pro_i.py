@@ -81,7 +81,7 @@ for i in range(len(ride_ele)-1):
         slope_group[slope_group_depth].append(ride_loc[i]) # son deger aktarildi
         slope_group.append([])
         slope_group_depth += 1 # depth arttirildi. atamada yeni olan grubun icerisine aktariliyor artik
-    elif(angle):
+    elif(angle_dif):
         a=3
 
     
