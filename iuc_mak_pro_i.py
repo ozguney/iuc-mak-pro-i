@@ -3,6 +3,7 @@ import gpxpy.gpx
 from gpxpy.geo import *
 from gpxpy.gpx import *
 
+from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 
