@@ -30,9 +30,9 @@ for element in ride_time:
 
 #===== Writing in a file operations =====#
 
-f = open("demo_lat.txt", "a+")
-f.write(str(ride_lat) + "\n")
-f.close()
+# f = open("demo_lat.txt", "a+")
+# f.write(str(ride_lat) + "\n")
+# f.close()
 
 #----- haversine_distance -----#
 # Haversine distance between two points, expressed in meters.
@@ -93,8 +93,12 @@ for i in range(len(ride_ele)-1):
 #==========================================================================
 
 
-# MatPlotLib Komutlari
+# MatPlotLib Komutlari (2D)
 t1 = np.arange(0.0, 333.5, 0.1)
 plt.plot(t1, ride_ele, label = "Yukseklik")
 # time ve ele kodu calismamakta. plt.plot(ride_time, ride_ele, label = "Yukseklik")
+
+# MatPlotLib Komutlari (3D)
+fig = plt.figure()
+ax = plt.axes(projection='3d')
 plt.show()
