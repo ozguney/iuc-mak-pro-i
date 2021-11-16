@@ -90,7 +90,10 @@ gpxDF["velocityMetersPerSecond"] = gpxDF["deltaDistMeters"] / gpxDF["deltaTimeSe
 gpxDF["velocityMilesPerHour"] = gpxDF["velocityMetersPerSecond"] * (3600.0 / 1609.34)
 
 gpxDFSpeedFiltered = gpxDF.loc[(gpxDF["velocityMilesPerHour"] >= 0) & (gpxDF["velocityMilesPerHour"] < 150)]
-gpxDFSpeedFiltered.describe()
+
+#   gpxDFSpeedFiltered HTML Output
+print(gpxDFSpeedFiltered.describe())
+gpxDFSpeedFiltered.describe().to_html("05_InformationsAboutRide.html")
 
 # Plot velocity
 
@@ -134,3 +137,7 @@ fig.update_layout(
     title = "Velocity vs lat,lon"
 )
 fig.write_html("03_Velocity.html")
+
+# Distribution of velocities with histogram
+fig = px.histogram(gpxDFSpeedFiltered, x="velocityMetersPerSecond", nbins=20)
+fig.write_html("04_Histogram.html")
