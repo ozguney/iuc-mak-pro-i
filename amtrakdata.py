@@ -5,6 +5,10 @@ import plotly.graph_objects as go
 import plotly.express as px
 from gpx_file_reader import GPXFile
 import plotly.express as px
+import gpxpy
+import gpxpy.gpx
+from gpxpy.geo import *
+from gpxpy.gpx import *
 
 #   Reading GPX File
 gpx_file_path = 'Afternoon_Ride.gpx'
@@ -141,3 +145,21 @@ fig.write_html("03_Velocity.html")
 # Distribution of velocities with histogram
 fig = px.histogram(gpxDFSpeedFiltered, x="velocityMetersPerSecond", nbins=20)
 fig.write_html("04_Histogram.html")
+
+# Creating Location Array
+
+ride_loc = []
+
+iteration=0
+for element in gpxDFSpeedFiltered:
+    ride_loc.append(Location(gpxDFSpeedFiltered['lat'].iloc[iteration], gpxDFSpeedFiltered['lon'].iloc[iteration], gpxDFSpeedFiltered['ele'].iloc[iteration]))
+    iterasyon = iterasyon+1
+
+# Grouping Slopes in an Array
+
+iteration=0
+
+tempAngleIndex = 0
+currentAngleIndex = 0
+tempAngle = elevation_angle(ride_loc[iteration], ride_loc[iteration+1])
+currentAngle = elevation_angle(ride_loc[iteration], ride_loc[iteration+1])
