@@ -157,9 +157,26 @@ for element in gpxDFSpeedFiltered:
 
 # Grouping Slopes in an Array
 
-iteration=0
+iteration = 0
+slopes = []
 
-tempAngleIndex = 0
-currentAngleIndex = 0
+tempArray = []
+tempAngleIndex = 0 # not used
+currentAngleIndex = 0 # not used
+rideloc_len = len(ride_loc)
+
 tempAngle = elevation_angle(ride_loc[iteration], ride_loc[iteration+1])
-currentAngle = elevation_angle(ride_loc[iteration], ride_loc[iteration+1])
+
+while True:
+    currentAngle = elevation_angle(ride_loc[iteration], ride_loc[iteration+1])
+    if(tempAngle+1>currentAngle & tempAngle-1<currentAngle):
+        tempArray.append(ride_loc[iteration])
+        iteration = iteration + 1
+    else:
+        slopes.append(tempArray)
+        tempArray = []
+        tempArray.append(ride_loc[iteration])
+        tempAngle = elevation_angle(ride_loc[iteration], ride_loc[iteration+1])
+        iteration = iteration + 1
+    if(iteration == rideloc_len):
+        break
