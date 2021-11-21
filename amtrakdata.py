@@ -180,3 +180,7 @@ while True:
         iteration = iteration + 1
     if(iteration == (rideloc_len-1)):
         break
+
+#bilinen hatalar
+#ride_loc 8 elemanlı
+#while döngüsü 6 eleman oluşturuyor
