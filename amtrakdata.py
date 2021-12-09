@@ -90,9 +90,9 @@ gpxDF["deltaDistMeters"] = dist_between(gpxDF['lat'].shift(),
                                         gpxDF.loc[1:, 'lon'])
 gpxDF["deltaTimeSeconds"] = (gpxDF.loc[1:, 'time'] - gpxDF['time'].shift()).apply(lambda row: row.total_seconds())
 gpxDF["velocityMetersPerSecond"] = gpxDF["deltaDistMeters"] / gpxDF["deltaTimeSeconds"]
-gpxDF["velocityMilesPerHour"] = gpxDF["velocityMetersPerSecond"] * (3600.0 / 1609.34)
+gpxDF["velocityKmPerHour"] = gpxDF["velocityMetersPerSecond"] * (3600.0 / 1000)
 
-gpxDFSpeedFiltered = gpxDF.loc[(gpxDF["velocityMilesPerHour"] >= 0) & (gpxDF["velocityMilesPerHour"] < 150)]
+gpxDFSpeedFiltered = gpxDF.loc[(gpxDF["velocityKmPerHour"] >= 0) & (gpxDF["velocityKmPerHour"] < 150)]
 
 #   gpxDFSpeedFiltered HTML Output
 print(gpxDFSpeedFiltered.describe())
