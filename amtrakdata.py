@@ -152,6 +152,7 @@ ride_loc = []
 for i in range(len(gpxDFSpeedFiltered)):
     ride_loc.append(Location(gpxDFSpeedFiltered['lat'].iloc[i], gpxDFSpeedFiltered['lon'].iloc[i], gpxDFSpeedFiltered['ele'].iloc[i]))
    #print(gpxDFSpeedFiltered['lat'].iloc[i])
+
 # Grouping Slopes in an Array
 
 iteration = 0
@@ -160,11 +161,11 @@ slopes = []
 tempArray = []
 rideloc_len = len(ride_loc)
 
-tempAngle = elevation_angle(ride_loc[iteration], ride_loc[iteration+1])
+tempAngle = elevation_angle(ride_loc[iteration], ride_loc[iteration+1]) # First angle for comparison. (output: -4.96)
 
 while True:
     currentAngle = elevation_angle(ride_loc[iteration], ride_loc[iteration+1])
-    if(tempAngle+5>currentAngle and tempAngle-5<currentAngle):
+    if(tempAngle+5>currentAngle and currentAngle>tempAngle-5):
         tempArray.append(ride_loc[iteration])
         iteration = iteration + 1
     else:
@@ -175,6 +176,11 @@ while True:
         iteration = iteration + 1
     if(iteration == (rideloc_len-1)):
         break
+
+# gpxDF icindeki deltaDistMeters, deltaTimeSeconds ve ele degeri kullanilarak
+# kendi elevation angle fonksiyonumu yaratmaliyim
+
+# pd.set_option('display.max_rows', 140)
 
 # algoritma
 # slopes[i][0] ve slopes[i][-1] arasindaki mesafe hesaplanmali
