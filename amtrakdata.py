@@ -42,7 +42,7 @@ fig.add_trace(go.Scatter3d(
     x = [gpxDF['lon'].iloc[0]], 
     y = [gpxDF['lat'].iloc[0]],
     z = [gpxDF['ele'].iloc[0]],
-    name = 'Starting Point'
+    name = 'Starting Point', 
 ))
 
 #   Adding Destination Point
@@ -165,7 +165,7 @@ tempAngle = elevation_angle(ride_loc[iteration], ride_loc[iteration+1]) # First 
 
 while True:
     currentAngle = elevation_angle(ride_loc[iteration], ride_loc[iteration+1])
-    if(tempAngle+5>currentAngle and currentAngle>tempAngle-5):
+    if(tempAngle+1>currentAngle and currentAngle>tempAngle-1):
         tempArray.append(ride_loc[iteration])
         iteration = iteration + 1
     else:
@@ -192,4 +192,6 @@ while True:
 # algoritma 2
 # her bir slopes[i][j] degeri bir nokta olarak grafikte gosterilmeli
 # slopes[i][0] ve slopes[i][1] arasindaki mesafe x yukseklik farki y olarak gosterilmeli
-# 
+
+
+# boxview renklendirmesi
