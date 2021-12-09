@@ -4,7 +4,6 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
 from gpx_file_reader import GPXFile
-import plotly.express as px
 import gpxpy
 import gpxpy.gpx
 from gpxpy.geo import *
@@ -33,7 +32,7 @@ fig.update_layout(
     )
 
 #   Writing Figure to HTML
-fig.write_html("01_WorldView.html")
+#fig.write_html("01_WorldView.html")
 
 #   Initilazing Figure
 fig = px.line_3d(gpxDF, x="lon", y="lat", z="ele")
@@ -60,7 +59,7 @@ fig.update_layout(
 )
 
 #   Writing Figure to HTML
-fig.write_html("02_BoxView.html")
+#fig.write_html("02_BoxView.html")
 
 # haversine formula: takes degrees
 def dist_between(lat1, lon1, lat2, lon2):
@@ -97,7 +96,7 @@ gpxDFSpeedFiltered = gpxDF.loc[(gpxDF["velocityMilesPerHour"] >= 0) & (gpxDF["ve
 
 #   gpxDFSpeedFiltered HTML Output
 print(gpxDFSpeedFiltered.describe())
-gpxDFSpeedFiltered.describe().to_html("05_InformationsAboutRide.html")
+#gpxDFSpeedFiltered.describe().to_html("05_InformationsAboutRide.html")
 
 # Plot velocity
 
@@ -140,11 +139,11 @@ fig.add_trace(go.Scatter3d(
 fig.update_layout(
     title = "Velocity vs lat,lon"
 )
-fig.write_html("03_Velocity.html")
+#fig.write_html("03_Velocity.html")
 
 # Distribution of velocities with histogram
 fig = px.histogram(gpxDFSpeedFiltered, x="velocityMetersPerSecond", nbins=20)
-fig.write_html("04_Histogram.html")
+#fig.write_html("04_Histogram.html")
 
 # Creating Location Array
 
@@ -159,8 +158,6 @@ iteration = 0
 slopes = []
 
 tempArray = []
-tempAngleIndex = 0 # not used
-currentAngleIndex = 0 # not used
 rideloc_len = len(ride_loc)
 
 tempAngle = elevation_angle(ride_loc[iteration], ride_loc[iteration+1])
@@ -179,6 +176,14 @@ while True:
     if(iteration == (rideloc_len-1)):
         break
 
-#bilinen hatalar
-#ride_loc 8 elemanlı
-#while döngüsü 6 eleman oluşturuyor
+# algoritma
+# slopes[i][0] ve slopes[i][-1] arasindaki mesafe hesaplanmali
+# bu mesafe x ekseninde gosterilmeli
+# slopes[i][0] slopes[i][-1] arasindaki yukseklik hesaplanmali
+# bu yukseklik y ekseninde gosterilmeli
+# her bir slopes[i] farkli renkte olmali
+
+# algoritma 2
+# her bir slopes[i][j] degeri bir nokta olarak grafikte gosterilmeli
+# slopes[i][0] ve slopes[i][1] arasindaki mesafe x yukseklik farki y olarak gosterilmeli
+# 
