@@ -4,6 +4,9 @@ import gpxpy
 import gpxpy.gpx
 import plotly.graph_objects as go
 import plotly.express as px
+import plotly.io as pio
+
+import visualizing
 from gpx_file_reader import GPXFile
 from datetime import datetime
 from gpxpy.geo import *
@@ -54,3 +57,9 @@ gpxDF_10 = gpxDF[gpxDF.index % 10 == 0] # Getting 1 row from every 10 row. Make 
 #Calculating speed, distance etc.
 gpxDF = DataFrameCalculations(gpxDF)
 gpxDF_10 = DataFrameCalculations(gpxDF_10) #atama yaparken bi problem veriyor.
+
+# pio.renderers.default = "notebook_connected"
+# pio.renderers.default = "browser"
+
+fig = visualizing.MapBox(gpxDF_10)
+fig.show()
