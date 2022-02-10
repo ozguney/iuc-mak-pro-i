@@ -9,14 +9,6 @@ from datetime import datetime
 from gpxpy.geo import *
 from gpxpy.gpx import *
 
-# Reading and parsing GPX file.
-gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Afternoon_Ride.gpx'
-gpxFile = GPXFile(gpx_file_path)
-gpxFile.print_info()
-
-# Converting to DataFrame.
-gpxDF = gpxFile.get_gpx_dataframe()
-
 def dist_between(lat1, lon1, lat2, lon2):
     R = 6371e3 #metres
     phi1 = lat1 * np.pi/180
@@ -27,11 +19,29 @@ def dist_between(lat1, lon1, lat2, lon2):
     a = np.sin(deltaPhi/2)**2 + np.cos(phi1) * np.cos(phi2) * (np.sin(deltaLambda/2)**2)
     c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
     return R * c # meters
+def DataFrameCalculations(df):
+    df.drop_duplicates(subset=['time'], keep=False) # Deleting duplicated times
+    df["deltaDistMeters"] = dist_between(df['lat'].shift(),
+                                            df['lon'].shift(),
+                                            df.loc[1:, 'lat'],
+                                            df.loc[1:, 'lon'])
+    df["deltaTimeSeconds"] = (df.loc[1:, 'time'] - df['time'].shift()).apply(lambda row: row.total_seconds())
+    df = df[df.deltaDistMeters != 0] # Deleting 0 meter rows
+    df = df.reset_index(drop=True) # Resetting index values due to deleting 0 second rows
+    df["velocityKmPerHour"] = df["deltaDistMeters"] / df["deltaTimeSeconds"] * (3600.0 / 1000)
+    df = df[df.velocityKmPerHour < 40]
+    df = df.reset_index(drop=True)
+    return df
 
-gpxDF["deltaDistMeters"] = dist_between(gpxDF['lat'].shift(),
-                                        gpxDF['lon'].shift(),
-                                        gpxDF.loc[1:, 'lat'],
-                                        gpxDF.loc[1:, 'lon'])
+# Reading and parsing GPX file.
+gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Mimar_sinan_koprusu_turu.gpx'
+gpxFile = GPXFile(gpx_file_path)
+gpxFile.print_info()
 
-gpxDF["deltaTimeSeconds"] = (gpxDF.loc[1:, 'time'] - gpxDF['time'].shift()).apply(lambda row: row.total_seconds())
-gpxDF = gpxDF[gpxDF.deltaTimeSeconds != 0] # Deleting 0 second rows
+# Converting to DataFrame.
+gpxDF = gpxFile.get_gpx_dataframe()
+gpxDF_10 = gpxDF[gpxDF.index % 10 == 0] # Getting 1 row from every 10 row. Make calculations more smooth
+
+#Calculating speed, distance etc.
+gpxDF = DataFrameCalculations(gpxDF)
+gpxDF_10 = DataFrameCalculations(gpxDF_10)
