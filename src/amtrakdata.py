@@ -10,7 +10,7 @@ from gpxpy.geo import *
 from gpxpy.gpx import *
 
 #   Reading GPX File
-gpx_file_path = 'Afternoon_Ride.gpx'
+gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Afternoon_Ride.gpx'
 gpxFile = GPXFile(gpx_file_path)
 
 gpxFile.print_info()
