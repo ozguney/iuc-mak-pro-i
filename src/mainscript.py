@@ -19,22 +19,31 @@ def dist_between(lat1, lon1, lat2, lon2):
     a = np.sin(deltaPhi/2)**2 + np.cos(phi1) * np.cos(phi2) * (np.sin(deltaLambda/2)**2)
     c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
     return R * c # meters
+def ElevationAngle(ele1, ele2, distance):
+    return np.arctan((ele2-ele1)/distance)
 def DataFrameCalculations(df):
     df.drop_duplicates(subset=['time'], keep=False) # Deleting duplicated times
     df["deltaDistMeters"] = dist_between(df['lat'].shift(),
-                                            df['lon'].shift(),
-                                            df.loc[1:, 'lat'],
-                                            df.loc[1:, 'lon'])
+                                        df['lon'].shift(),
+                                        df.loc[1:, 'lat'],
+                                        df.loc[1:, 'lon'])
+
+    df["elevationAngle"] = ElevationAngle(df['ele'].shift(),
+                                          df.loc[1:, 'ele'],
+                                          df["deltaDistMeters"])
+
     df["deltaTimeSeconds"] = (df.loc[1:, 'time'] - df['time'].shift()).apply(lambda row: row.total_seconds())
     df = df[df.deltaDistMeters != 0] # Deleting 0 meter rows
     df = df.reset_index(drop=True) # Resetting index values due to deleting 0 second rows
     df["velocityKmPerHour"] = df["deltaDistMeters"] / df["deltaTimeSeconds"] * (3600.0 / 1000)
     df = df[df.velocityKmPerHour < 40]
+
     df = df.reset_index(drop=True)
     return df
 
+
 # Reading and parsing GPX file.
-gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Mimar_sinan_koprusu_turu.gpx'
+gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Afternoon_Ride.gpx'
 gpxFile = GPXFile(gpx_file_path)
 gpxFile.print_info()
 
@@ -44,4 +53,4 @@ gpxDF_10 = gpxDF[gpxDF.index % 10 == 0] # Getting 1 row from every 10 row. Make 
 
 #Calculating speed, distance etc.
 gpxDF = DataFrameCalculations(gpxDF)
-gpxDF_10 = DataFrameCalculations(gpxDF_10)
+gpxDF_10 = DataFrameCalculations(gpxDF_10) #atama yaparken bi problem veriyor.
