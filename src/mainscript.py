@@ -5,7 +5,6 @@ import gpxpy.gpx
 import plotly.graph_objects as go
 import plotly.express as px
 import plotly.io as pio
-
 import visualizing
 from gpx_file_reader import GPXFile
 from datetime import datetime
@@ -61,5 +60,9 @@ gpxDF_10 = DataFrameCalculations(gpxDF_10) #atama yaparken bi problem veriyor.
 # pio.renderers.default = "notebook_connected"
 # pio.renderers.default = "browser"
 
-fig = visualizing.MapBox(gpxDF_10)
-fig.show()
+fig_mapbox = visualizing.MapBox(gpxDF_10)
+fig_mapbox.show()
+fig_scatter3d = visualizing.Scatter3d(gpxDF_10)
+fig_scatter3d.show()
+fig_scatter3dv = visualizing.Scatter3dVelocity(gpxDF_10)
+fig_scatter3dv.show()
