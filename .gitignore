@@ -127,12 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-04_Histogram.html
-01_WorldView.html
-02_BoxView.html
-03_Velocity.html
-04_Histogram.html
-04_Histogram.html
-03_Velocity.html
-02_BoxView.html
-01_WorldView.html
+
+# My Ignore Files
+
