@@ -1,11 +1,12 @@
-from lib2to3.pgen2.pgen import DFAState
+from turtle import fillcolor
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
+from plotly.subplots import make_subplots
 
 def MapBox(df):
-    #todo marker ve line düzenlemesi. zoom düzenlemesi. center düzenlemesi. başlangıç bitiş noktasının ayarlanması
+    #todo başlangıç bitiş noktasının ayarlanması
     fig = go.Figure(go.Scattermapbox(
         mode = "markers+lines",
         lon = df['lon'],
@@ -88,9 +89,48 @@ def Scatter3dVelocity(df):
         )
     return fig
 
-def Velocity2d(df):
-    return 0
-def Elevation2d(df):
-    return 0
-def HeatMap(df):
-    return 0
+def VelocityTimeGraph(df):
+    fig = px.line(df, x=df["time"], y=df["velocityKmPerHour"], title='Velocity - Time Graph')
+    return fig
+
+def VelocityHeatMap(df):
+    # data fazlaligindan dolayi yavas olan yerleri daha yogun gosterdigi icin veri olan fazla kismi sari gosteriyor
+    fig = go.Figure(go.Densitymapbox(
+        lon = df['lon'],
+        lat = df['lat'],
+        z = df["velocityKmPerHour"]*1000,
+        radius=10))
+    fig.update_layout(mapbox = {
+            'center': {'lon': df['lon'].iloc[0], 'lat': df['lat'].iloc[0]},
+            'style': "stamen-terrain",
+            'zoom': 14})
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    return fig
+
+def ElevationTimeGraph(df):
+    fig = px.line(df, x=df["time"], y=df["ele"], title='Elevation - Time Graph')
+    return fig
+
+def VelocityElevationCombined(df):
+    # Create figure with secondary y-axis
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+    # Add traces
+    fig.add_trace(
+        go.Scatter(x=df["time"], y=df["ele"], name="yaxis data"),
+        secondary_y=False,)
+
+    fig.add_trace(
+        go.Scatter(x=df["time"], y=df["velocityKmPerHour"], name="yaxis2 data"),
+        secondary_y=True,)
+
+    # Add figure title
+    fig.update_layout(title_text="Double Y Axis Example")
+
+    # Set x-axis title
+    fig.update_xaxes(title_text="xaxis title")
+
+    # Set y-axes titles
+    fig.update_yaxes(title_text="<b>primary</b> yaxis title", secondary_y=False)
+    fig.update_yaxes(title_text="<b>secondary</b> yaxis title", secondary_y=True)
+    return fig

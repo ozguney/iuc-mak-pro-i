@@ -38,7 +38,7 @@ def DataFrameCalculations(df):
     df = df[df.deltaDistMeters != 0] # Deleting 0 meter rows
     df = df.reset_index(drop=True) # Resetting index values due to deleting 0 second rows
     df["velocityKmPerHour"] = df["deltaDistMeters"] / df["deltaTimeSeconds"] * (3600.0 / 1000)
-    df = df[df.velocityKmPerHour < 40]
+    df = df[df.velocityKmPerHour < 50]
 
     df = df.reset_index(drop=True)
     return df
@@ -57,17 +57,23 @@ gpxDF_10 = gpxDF[gpxDF.index % 10 == 0] # Getting 1 row from every 10 row. Make 
 gpxDF = DataFrameCalculations(gpxDF)
 gpxDF_10 = DataFrameCalculations(gpxDF_10) #atama yaparken bi problem veriyor.
 
-
+gpxDF_10
 
 
 #### VISUALIZING ####
 
 # pio.renderers.default = "notebook_connected"
-# pio.renderers.default = "browser"
+pio.renderers.default = "browser"
 
-fig_mapbox = visualizing.MapBox(gpxDF_10)
-fig_mapbox.show()
-# fig_scatter3d = visualizing.Scatter3d(gpxDF_10)
-# fig_scatter3d.show()
-# fig_scatter3dv = visualizing.Scatter3dVelocity(gpxDF_10)
-# fig_scatter3dv.show()
+# fig_MapBox = visualizing.MapBox(gpxDF_10)
+# fig_MapBox.show()
+# fig_Scatter3d = visualizing.Scatter3d(gpxDF_10)
+# fig_Scatter3d.show()
+# fig_Scatter3dVelocity = visualizing.Scatter3dVelocity(gpxDF_10)
+# fig_Scatter3dVelocity.show()
+# fig_VelocityTimeGraph = visualizing.VelocityTimeGraph(gpxDF_10)
+# fig_VelocityTimeGraph.show()
+# fig_ElevationTimeGraph = visualizing.ElevationTimeGraph(gpxDF_10)
+# fig_ElevationTimeGraph.show()
+fig_VelocityElevationCombined = visualizing.VelocityElevationCombined(gpxDF_10)
+fig_VelocityElevationCombined.show()
