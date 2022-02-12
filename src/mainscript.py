@@ -57,12 +57,17 @@ gpxDF_10 = gpxDF[gpxDF.index % 10 == 0] # Getting 1 row from every 10 row. Make 
 gpxDF = DataFrameCalculations(gpxDF)
 gpxDF_10 = DataFrameCalculations(gpxDF_10) #atama yaparken bi problem veriyor.
 
+
+
+
+#### VISUALIZING ####
+
 # pio.renderers.default = "notebook_connected"
 # pio.renderers.default = "browser"
 
 fig_mapbox = visualizing.MapBox(gpxDF_10)
 fig_mapbox.show()
-fig_scatter3d = visualizing.Scatter3d(gpxDF_10)
-fig_scatter3d.show()
-fig_scatter3dv = visualizing.Scatter3dVelocity(gpxDF_10)
-fig_scatter3dv.show()
+# fig_scatter3d = visualizing.Scatter3d(gpxDF_10)
+# fig_scatter3d.show()
+# fig_scatter3dv = visualizing.Scatter3dVelocity(gpxDF_10)
+# fig_scatter3dv.show()
