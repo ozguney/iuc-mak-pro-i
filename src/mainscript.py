@@ -39,10 +39,13 @@ def DataFrameCalculations(df):
     df = df.reset_index(drop=True) # Resetting index values due to deleting 0 second rows
     df["velocityKmPerHour"] = df["deltaDistMeters"] / df["deltaTimeSeconds"] * (3600.0 / 1000)
     df = df[df.velocityKmPerHour < 50]
-
     df = df.reset_index(drop=True)
+    # Dataframe Smoothing
     return df
 
+def DataFrameSmoothing(df):
+    df["velocityKmPerHour_ma"] = df["velocityKmPerHour"].rolling(window=100).mean()
+    return df
 
 # Reading and parsing GPX file.
 gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Afternoon_Ride.gpx'
@@ -55,9 +58,10 @@ gpxDF_10 = gpxDF[gpxDF.index % 10 == 0] # Getting 1 row from every 10 row. Make 
 
 #Calculating speed, distance etc.
 gpxDF = DataFrameCalculations(gpxDF)
-gpxDF_10 = DataFrameCalculations(gpxDF_10) #atama yaparken bi problem veriyor.
+gpxDF = DataFrameSmoothing(gpxDF)
 
-gpxDF_10
+# gpxDF_10 = DataFrameCalculations(gpxDF_10) #atama yaparken bi problem veriyor.
+# gpxDF_10
 
 
 #### VISUALIZING ####
@@ -71,9 +75,9 @@ pio.renderers.default = "browser"
 # fig_Scatter3d.show()
 # fig_Scatter3dVelocity = visualizing.Scatter3dVelocity(gpxDF_10)
 # fig_Scatter3dVelocity.show()
-# fig_VelocityTimeGraph = visualizing.VelocityTimeGraph(gpxDF_10)
-# fig_VelocityTimeGraph.show()
+fig_VelocityTimeGraph = visualizing.VelocityTimeGraph(gpxDF)
+fig_VelocityTimeGraph.show()
 # fig_ElevationTimeGraph = visualizing.ElevationTimeGraph(gpxDF_10)
 # fig_ElevationTimeGraph.show()
-fig_VelocityElevationCombined = visualizing.VelocityElevationCombined(gpxDF_10)
+fig_VelocityElevationCombined = visualizing.VelocityElevationCombined(gpxDF)
 fig_VelocityElevationCombined.show()

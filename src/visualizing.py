@@ -90,7 +90,7 @@ def Scatter3dVelocity(df):
     return fig
 
 def VelocityTimeGraph(df):
-    fig = px.line(df, x=df["time"], y=df["velocityKmPerHour"], title='Velocity - Time Graph')
+    fig = px.line(df, x=df["time"], y=df["velocityKmPerHour_ma"], title='Velocity - Time Graph')
     return fig
 
 def VelocityHeatMap(df):
@@ -114,23 +114,15 @@ def ElevationTimeGraph(df):
 def VelocityElevationCombined(df):
     # Create figure with secondary y-axis
     fig = make_subplots(specs=[[{"secondary_y": True}]])
-
-    # Add traces
     fig.add_trace(
-        go.Scatter(x=df["time"], y=df["ele"], name="yaxis data"),
-        secondary_y=False,)
-
+        go.Scatter(x=df["time"], y=df["ele"], name="Elevation"),
+        secondary_y=False)
     fig.add_trace(
-        go.Scatter(x=df["time"], y=df["velocityKmPerHour"], name="yaxis2 data"),
-        secondary_y=True,)
-
-    # Add figure title
-    fig.update_layout(title_text="Double Y Axis Example")
-
-    # Set x-axis title
-    fig.update_xaxes(title_text="xaxis title")
-
-    # Set y-axes titles
-    fig.update_yaxes(title_text="<b>primary</b> yaxis title", secondary_y=False)
-    fig.update_yaxes(title_text="<b>secondary</b> yaxis title", secondary_y=True)
+        go.Scatter(x=df["time"], y=df["velocityKmPerHour_ma"], name="Velocity kmh"),
+        secondary_y=True)
+    fig.update_layout(title_text="Elevation Velocity Combined Graph")
+    fig.update_xaxes(title_text="Time")
+    fig.update_yaxes(title_text="Elevation", secondary_y=False)
+    fig.update_yaxes(title_text="Velocity kmh", secondary_y=True)
+    # fig.update_traces(line_shape='spline') # Tried data smoothing but not worked the way that i wanted.
     return fig
