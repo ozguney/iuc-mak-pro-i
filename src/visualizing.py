@@ -98,7 +98,7 @@ def VelocityHeatMap(df):
     fig = go.Figure(go.Densitymapbox(
         lon = df['lon'],
         lat = df['lat'],
-        z = df["velocityKmPerHour"]*1000,
+        z = df["velocityKmPerHour_ma"],
         radius=10))
     fig.update_layout(mapbox = {
             'center': {'lon': df['lon'].iloc[0], 'lat': df['lat'].iloc[0]},

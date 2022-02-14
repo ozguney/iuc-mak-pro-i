@@ -42,7 +42,6 @@ def DataFrameCalculations(df):
     df = df.reset_index(drop=True)
     # Dataframe Smoothing
     return df
-
 def DataFrameSmoothing(df):
     df["velocityKmPerHour_ma"] = df["velocityKmPerHour"].rolling(window=100).mean()
     return df
@@ -54,14 +53,11 @@ gpxFile.print_info()
 
 # Converting to DataFrame.
 gpxDF = gpxFile.get_gpx_dataframe()
-gpxDF_10 = gpxDF[gpxDF.index % 10 == 0] # Getting 1 row from every 10 row. Make calculations more smooth
+# gpxDF_10 = gpxDF[gpxDF.index % 10 == 0] # Getting 1 row from every 10 row. Make calculations more smooth
 
 #Calculating speed, distance etc.
 gpxDF = DataFrameCalculations(gpxDF)
 gpxDF = DataFrameSmoothing(gpxDF)
-
-# gpxDF_10 = DataFrameCalculations(gpxDF_10) #atama yaparken bi problem veriyor.
-# gpxDF_10
 
 
 #### VISUALIZING ####
@@ -69,15 +65,18 @@ gpxDF = DataFrameSmoothing(gpxDF)
 # pio.renderers.default = "notebook_connected"
 pio.renderers.default = "browser"
 
-# fig_MapBox = visualizing.MapBox(gpxDF_10)
+# fig_MapBox = visualizing.MapBox(gpxDF)
 # fig_MapBox.show()
-# fig_Scatter3d = visualizing.Scatter3d(gpxDF_10)
+# fig_Scatter3d = visualizing.Scatter3d(gpxDF)
 # fig_Scatter3d.show()
-# fig_Scatter3dVelocity = visualizing.Scatter3dVelocity(gpxDF_10)
+# fig_Scatter3dVelocity = visualizing.Scatter3dVelocity(gpxDF)
 # fig_Scatter3dVelocity.show()
-fig_VelocityTimeGraph = visualizing.VelocityTimeGraph(gpxDF)
-fig_VelocityTimeGraph.show()
-# fig_ElevationTimeGraph = visualizing.ElevationTimeGraph(gpxDF_10)
+# fig_VelocityTimeGraph = visualizing.VelocityTimeGraph(gpxDF)
+# fig_VelocityTimeGraph.show()
+# fig_ElevationTimeGraph = visualizing.ElevationTimeGraph(gpxDF)
 # fig_ElevationTimeGraph.show()
 fig_VelocityElevationCombined = visualizing.VelocityElevationCombined(gpxDF)
 fig_VelocityElevationCombined.show()
+
+# fig_VelocityHeatMap = visualizing.VelocityHeatMap(gpxDF)
+# fig_VelocityHeatMap.show()
