@@ -1,5 +1,5 @@
-import pandas as pd
-import numpy as np
+import pandas as pd # pandas 1.3.5
+import numpy as np # numpy 1.22.2
 import gpxpy
 import gpxpy.gpx
 import plotly.graph_objects as go
