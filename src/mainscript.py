@@ -44,6 +44,7 @@ def DataFrameCalculations(df):
     return df
 def DataFrameSmoothing(df):
     df["velocityKmPerHour_ma"] = df["velocityKmPerHour"].rolling(window=100).mean()
+    df["velocityKmPerHour_ma1"] = df["velocityKmPerHour"].rolling(window=20).mean()
     return df
 
 # Reading and parsing GPX file.
@@ -65,21 +66,24 @@ gpxDF = DataFrameSmoothing(gpxDF)
 # pio.renderers.default = "notebook_connected"
 pio.renderers.default = "browser"
 
-fig_MapBox = visualizing.MapBox(gpxDF)
-fig_MapBox.show()
-fig_Scatter3d = visualizing.Scatter3d(gpxDF)
-fig_Scatter3d.show()
-fig_Scatter3dVelocity = visualizing.Scatter3dVelocity(gpxDF)
-fig_Scatter3dVelocity.show()
+# fig_MapBox = visualizing.MapBox(gpxDF)
+# fig_MapBox.show()
+# fig_Scatter3d = visualizing.Scatter3d(gpxDF)
+# fig_Scatter3d.show()
+# fig_Scatter3dVelocity = visualizing.Scatter3dVelocity(gpxDF)
+# fig_Scatter3dVelocity.show()
 fig_VelocityTimeGraph = visualizing.VelocityTimeGraph(gpxDF)
 fig_VelocityTimeGraph.show()
-fig_ElevationTimeGraph = visualizing.ElevationTimeGraph(gpxDF)
-fig_ElevationTimeGraph.show()
-fig_VelocityElevationCombined = visualizing.VelocityElevationCombined(gpxDF)
-fig_VelocityElevationCombined.show()
+fig_VelocityTimeGraph2 = visualizing.VelocityTimeGraph2(gpxDF)
+fig_VelocityTimeGraph2.show()
 
-fig_VelocityHeatMap = visualizing.VelocityHeatMap(gpxDF)
-fig_VelocityHeatMap.show()
+# fig_ElevationTimeGraph = visualizing.ElevationTimeGraph(gpxDF)
+# fig_ElevationTimeGraph.show()
+# fig_VelocityElevationCombined = visualizing.VelocityElevationCombined(gpxDF)
+# fig_VelocityElevationCombined.show()
+
+# fig_VelocityHeatMap = visualizing.VelocityHeatMap(gpxDF)
+# fig_VelocityHeatMap.show()
 
 #### WRITING ####
 
@@ -90,3 +94,7 @@ fig_VelocityHeatMap.show()
 # fig_ElevationTimeGraph.write_html("fig_ElevationTimeGraph.html")
 # fig_VelocityElevationCombined.write_html("fig_VelocityElevationCombined.html")
 # fig_VelocityHeatMap.write_html("fig_VelocityHeatMap.html")
+
+#todo iki ma grafiği üst üste çizilmeli
+#kalman filtresi
+#eğimler

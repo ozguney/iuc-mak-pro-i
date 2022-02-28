@@ -126,3 +126,7 @@ def VelocityElevationCombined(df):
     fig.update_yaxes(title_text="Velocity kmh", secondary_y=True)
     # fig.update_traces(line_shape='spline') # Tried data smoothing but not worked the way that i wanted.
     return fig
+
+def VelocityTimeGraph2(df):
+    fig = px.line(df, x=df["time"], y=df["velocityKmPerHour_ma1"], title='Velocity - Time Graph')
+    return fig
