@@ -10,6 +10,7 @@ from gpx_file_reader import GPXFile
 from datetime import datetime
 from gpxpy.geo import *
 from gpxpy.gpx import *
+from scipy.signal import argrelextrema
 
 def dist_between(lat1, lon1, lat2, lon2):
     R = 6371e3 #metres
@@ -47,6 +48,12 @@ def DataFrameSmoothing(df):
     df["velocityKmPerHour_ma20"] = df["velocityKmPerHour"].rolling(window=20).mean()
     return df
 
+def GroupSlopes(df):
+    n = 50 # number of points to be checked before and after
+    df['min'] = df.iloc[argrelextrema(df.ele.values, np.less_equal,order=n)[0]]['ele']
+    df['max'] = df.iloc[argrelextrema(df.ele.values, np.greater_equal,order=n)[0]]['ele']
+    return df
+
 # Reading and parsing GPX file.
 gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Afternoon_Ride.gpx'
 gpxFile = GPXFile(gpx_file_path)
@@ -59,6 +66,7 @@ gpxDF = gpxFile.get_gpx_dataframe()
 #Calculating speed, distance etc.
 gpxDF = DataFrameCalculations(gpxDF)
 gpxDF = DataFrameSmoothing(gpxDF)
+gpxDF = GroupSlopes(gpxDF)
 
 
 #### VISUALIZING ####
@@ -72,11 +80,10 @@ pio.renderers.default = "browser"
 # fig_Scatter3d.show()
 # fig_Scatter3dVelocity = visualizing.Scatter3dVelocity(gpxDF)
 # fig_Scatter3dVelocity.show()
-fig_VelocityTimeGraph_ma100 = visualizing.VelocityTimeGraph_ma100(gpxDF)
-fig_VelocityTimeGraph_ma100.show()
+# fig_VelocityTimeGraph_ma100 = visualizing.VelocityTimeGraph_ma100(gpxDF)
+# fig_VelocityTimeGraph_ma100.show()
 fig_VelocityTimeGraphMaComparison = visualizing.VelocityTimeGraphMaComparison(gpxDF)
 fig_VelocityTimeGraphMaComparison.show()
-
 # fig_ElevationTimeGraph = visualizing.ElevationTimeGraph(gpxDF)
 # fig_ElevationTimeGraph.show()
 # fig_VelocityElevationCombined = visualizing.VelocityElevationCombined(gpxDF)
@@ -84,6 +91,9 @@ fig_VelocityTimeGraphMaComparison.show()
 
 # fig_VelocityHeatMap = visualizing.VelocityHeatMap(gpxDF)
 # fig_VelocityHeatMap.show()
+
+fig_ElevationMinMaxPoints = visualizing.ElevationMinMaxPoints(gpxDF)
+fig_ElevationMinMaxPoints.show()
 
 #### WRITING ####
 

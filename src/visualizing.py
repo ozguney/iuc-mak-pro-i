@@ -100,12 +100,15 @@ def VelocityTimeGraphMaComparison(df):
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=df["time"], y=df["velocityKmPerHour"],
                         mode='lines',
+                        line=dict(width=1),
                         name='Raw Data'))
     fig.add_trace(go.Scatter(x=df["time"], y=df["velocityKmPerHour_ma20"],
                         mode='lines',
+                        line=dict(width=2),
                         name='Moving Average (20)'))
     fig.add_trace(go.Scatter(x=df["time"], y=df["velocityKmPerHour_ma100"],
-                        mode='lines', 
+                        mode='lines',
+                        line=dict(width=5), 
                         name='Moving Average (100)'))
     return fig
 
@@ -143,3 +146,20 @@ def VelocityElevationCombined(df):
     # fig.update_traces(line_shape='spline') # Tried data smoothing but not worked the way that i wanted.
     return fig
 
+def ElevationMinMaxPoints(df):
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df["time"], 
+                            y=df["ele"],
+                            mode='lines',
+                            name='Elevation'))
+    fig.add_trace(go.Scatter(x=df["time"],
+                            y=df['min'],
+                            mode='markers',
+                            marker=dict(color="red", size=10),
+                            name='Minimum Value'))
+    fig.add_trace(go.Scatter(x=df["time"],
+                            y=df['max'],
+                            mode='markers',
+                            marker=dict(color="green", size=10), 
+                            name='Maximum Value'))
+    return fig
