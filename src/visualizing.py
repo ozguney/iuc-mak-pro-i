@@ -89,8 +89,11 @@ def Scatter3dVelocity(df):
         )
     return fig
 
-def VelocityTimeGraph(df):
-    fig = px.line(df, x=df["time"], y=df["velocityKmPerHour_ma"], title='Velocity - Time Graph')
+def VelocityTimeGraph_ma100(df):
+    fig = px.line(df, 
+                  x=df["time"], 
+                  y=df["velocityKmPerHour_ma100"], 
+                  title='Velocity - Time Graph')
     return fig
 
 def VelocityHeatMap(df):
@@ -127,6 +130,15 @@ def VelocityElevationCombined(df):
     # fig.update_traces(line_shape='spline') # Tried data smoothing but not worked the way that i wanted.
     return fig
 
-def VelocityTimeGraph2(df):
-    fig = px.line(df, x=df["time"], y=df["velocityKmPerHour_ma1"], title='Velocity - Time Graph')
+def VelocityTimeGraphMaComparison(df):
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df["time"], y=df["velocityKmPerHour"],
+                        mode='lines',
+                        name='Raw Data'))
+    fig.add_trace(go.Scatter(x=df["time"], y=df["velocityKmPerHour_ma20"],
+                        mode='lines',
+                        name='Moving Average (20)'))
+    fig.add_trace(go.Scatter(x=df["time"], y=df["velocityKmPerHour_ma100"],
+                        mode='lines', 
+                        name='Moving Average (100)'))
     return fig

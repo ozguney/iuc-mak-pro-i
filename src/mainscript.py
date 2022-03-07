@@ -43,8 +43,8 @@ def DataFrameCalculations(df):
     # Dataframe Smoothing
     return df
 def DataFrameSmoothing(df):
-    df["velocityKmPerHour_ma"] = df["velocityKmPerHour"].rolling(window=100).mean()
-    df["velocityKmPerHour_ma1"] = df["velocityKmPerHour"].rolling(window=20).mean()
+    df["velocityKmPerHour_ma100"] = df["velocityKmPerHour"].rolling(window=100).mean()
+    df["velocityKmPerHour_ma20"] = df["velocityKmPerHour"].rolling(window=20).mean()
     return df
 
 # Reading and parsing GPX file.
@@ -72,10 +72,10 @@ pio.renderers.default = "browser"
 # fig_Scatter3d.show()
 # fig_Scatter3dVelocity = visualizing.Scatter3dVelocity(gpxDF)
 # fig_Scatter3dVelocity.show()
-fig_VelocityTimeGraph = visualizing.VelocityTimeGraph(gpxDF)
-fig_VelocityTimeGraph.show()
-fig_VelocityTimeGraph2 = visualizing.VelocityTimeGraph2(gpxDF)
-fig_VelocityTimeGraph2.show()
+fig_VelocityTimeGraph_ma100 = visualizing.VelocityTimeGraph_ma100(gpxDF)
+fig_VelocityTimeGraph_ma100.show()
+fig_VelocityTimeGraphMaComparison = visualizing.VelocityTimeGraphMaComparison(gpxDF)
+fig_VelocityTimeGraphMaComparison.show()
 
 # fig_ElevationTimeGraph = visualizing.ElevationTimeGraph(gpxDF)
 # fig_ElevationTimeGraph.show()
