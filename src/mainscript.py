@@ -43,10 +43,6 @@ def DataFrameCalculations(df):
     df = df[df.velocityKmPerHour < 50]
     df = df.reset_index(drop=True)
     return df
-def CumulativeElevationDistance(df):
-    df["cumElevation"] = df["deltaElevationMeters"].cumsum()
-    df["cumDistance"] = df["deltaDistMeters"].cumsum()
-    return df
 def DataFrameSmoothing(df):
     df["velocityKmPerHour_ma100"] = df["velocityKmPerHour"].rolling(window=100).mean()
     df["velocityKmPerHour_ma20"] = df["velocityKmPerHour"].rolling(window=20).mean()
@@ -56,8 +52,24 @@ def GroupSlopes(df):
     df['min'] = df.iloc[argrelextrema(df.ele.values, np.less_equal,order=n)[0]]['ele']
     df['max'] = df.iloc[argrelextrema(df.ele.values, np.greater_equal,order=n)[0]]['ele']
     return df
-
-
+def CumulativeElevationDistance(df):
+    df["cumElevation"] = df["deltaElevationMeters"].cumsum()
+    df["cumDistance"] = df["deltaDistMeters"].cumsum()
+    return df
+def ElevationGradients(df):
+    gradients = [np.nan]
+    for ind, row in df.iterrows():
+        if ind == 0:
+            continue
+        grade = (row["deltaElevationMeters"]/row["deltaDistMeters"]) * 100
+        if grade > 30:
+            gradients.append(np.nan)
+        elif grade < -30:
+            gradients.append(np.nan)
+        else:
+            gradients.append(np.round(grade, 1))
+    df["elevationGradients"] = gradients
+    return df
 # Reading and parsing GPX file.
 gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Afternoon_Ride.gpx'
 gpxFile = GPXFile(gpx_file_path)
@@ -72,6 +84,8 @@ gpxDF = DataFrameCalculations(gpxDF)
 gpxDF = DataFrameSmoothing(gpxDF)
 gpxDF = GroupSlopes(gpxDF)
 gpxDF = CumulativeElevationDistance(gpxDF)
+gpxDF = ElevationGradients(gpxDF)
+gpxDF["elevationGradients"] = gpxDF["elevationGradients"].fillna(0)
 
 #### VISUALIZING ####
 
@@ -86,8 +100,8 @@ pio.renderers.default = "browser"
 # fig_Scatter3dVelocity.show()
 # fig_VelocityTimeGraph_ma100 = visualizing.VelocityTimeGraph_ma100(gpxDF)
 # fig_VelocityTimeGraph_ma100.show()
-fig_VelocityTimeGraphMaComparison = visualizing.VelocityTimeGraphMaComparison(gpxDF)
-fig_VelocityTimeGraphMaComparison.show()
+# fig_VelocityTimeGraphMaComparison = visualizing.VelocityTimeGraphMaComparison(gpxDF)
+# fig_VelocityTimeGraphMaComparison.show()
 # fig_ElevationTimeGraph = visualizing.ElevationTimeGraph(gpxDF)
 # fig_ElevationTimeGraph.show()
 # fig_VelocityElevationCombined = visualizing.VelocityElevationCombined(gpxDF)
@@ -96,8 +110,8 @@ fig_VelocityTimeGraphMaComparison.show()
 # fig_VelocityHeatMap = visualizing.VelocityHeatMap(gpxDF)
 # fig_VelocityHeatMap.show()
 
-fig_ElevationMinMaxPoints = visualizing.ElevationMinMaxPoints(gpxDF)
-fig_ElevationMinMaxPoints.show()
+# fig_ElevationMinMaxPoints = visualizing.ElevationMinMaxPoints(gpxDF)
+# fig_ElevationMinMaxPoints.show()
 
 #### WRITING ####
 
