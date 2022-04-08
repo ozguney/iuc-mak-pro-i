@@ -55,7 +55,7 @@ def GroupSlopes(df):
     return df
 
 # Reading and parsing GPX file.
-gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\eceabat_behramli_07_06_2019.gpx'
+gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Afternoon_Ride.gpx'
 gpxFile = GPXFile(gpx_file_path)
 gpxFile.print_info()
 
@@ -82,8 +82,8 @@ pio.renderers.default = "browser"
 # fig_Scatter3dVelocity.show()
 # fig_VelocityTimeGraph_ma100 = visualizing.VelocityTimeGraph_ma100(gpxDF)
 # fig_VelocityTimeGraph_ma100.show()
-# fig_VelocityTimeGraphMaComparison = visualizing.VelocityTimeGraphMaComparison(gpxDF)
-# fig_VelocityTimeGraphMaComparison.show()
+fig_VelocityTimeGraphMaComparison = visualizing.VelocityTimeGraphMaComparison(gpxDF)
+fig_VelocityTimeGraphMaComparison.show()
 # fig_ElevationTimeGraph = visualizing.ElevationTimeGraph(gpxDF)
 # fig_ElevationTimeGraph.show()
 # fig_VelocityElevationCombined = visualizing.VelocityElevationCombined(gpxDF)
