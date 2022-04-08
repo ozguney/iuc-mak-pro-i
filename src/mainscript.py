@@ -2,6 +2,7 @@ import pandas as pd # pandas 1.3.5
 import numpy as np # numpy 1.22.2
 import gpxpy
 import gpxpy.gpx
+import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
 import plotly.io as pio
@@ -30,7 +31,7 @@ def DataFrameCalculations(df):
                                         df['lon'].shift(),
                                         df.loc[1:, 'lat'],
                                         df.loc[1:, 'lon'])
-
+    df["deltaElevationMeters"] = df["ele"].diff()
     df["elevationAngle"] = ElevationAngle(df['ele'].shift(),
                                           df.loc[1:, 'ele'],
                                           df["deltaDistMeters"])
@@ -41,18 +42,21 @@ def DataFrameCalculations(df):
     df["velocityKmPerHour"] = df["deltaDistMeters"] / df["deltaTimeSeconds"] * (3600.0 / 1000)
     df = df[df.velocityKmPerHour < 50]
     df = df.reset_index(drop=True)
-    # Dataframe Smoothing
+    return df
+def CumulativeElevationDistance(df):
+    df["cumElevation"] = df["deltaElevationMeters"].cumsum()
+    df["cumDistance"] = df["deltaDistMeters"].cumsum()
     return df
 def DataFrameSmoothing(df):
     df["velocityKmPerHour_ma100"] = df["velocityKmPerHour"].rolling(window=100).mean()
     df["velocityKmPerHour_ma20"] = df["velocityKmPerHour"].rolling(window=20).mean()
     return df
-
 def GroupSlopes(df):
     n = 50 # number of points to be checked before and after
     df['min'] = df.iloc[argrelextrema(df.ele.values, np.less_equal,order=n)[0]]['ele']
     df['max'] = df.iloc[argrelextrema(df.ele.values, np.greater_equal,order=n)[0]]['ele']
     return df
+
 
 # Reading and parsing GPX file.
 gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Afternoon_Ride.gpx'
@@ -67,7 +71,7 @@ gpxDF = gpxFile.get_gpx_dataframe()
 gpxDF = DataFrameCalculations(gpxDF)
 gpxDF = DataFrameSmoothing(gpxDF)
 gpxDF = GroupSlopes(gpxDF)
-
+gpxDF = CumulativeElevationDistance(gpxDF)
 
 #### VISUALIZING ####
 
