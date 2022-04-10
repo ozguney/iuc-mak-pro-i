@@ -70,6 +70,47 @@ def ElevationGradients(df):
             gradients.append(np.round(grade, 1))
     df["elevationGradients"] = gradients
     return df
+def GradientRangeTagging(df):
+    bins = pd.IntervalIndex.from_tuples([
+    (-30, -10),
+    (-10, -5), 
+    (-5, -3), 
+    (-3, -1), 
+    (-1, 0),
+    (0, 1), 
+    (1, 3), 
+    (3, 5), 
+    (5, 7), 
+    (7, 10), 
+    (10, 12), 
+    (12, 15), 
+    (15, 30)],
+    closed='left')
+    df["gradientRange"] = pd.cut(df["elevationGradients"], bins=bins)
+    return df
+def GradientRangeTagDetails(df):
+    gradient_details = []
+
+    for gr_range in df['gradientRange'].unique():
+        # Keep that subset only
+        subset = df[df['gradientRange'] == gr_range]
+        
+        # Statistics
+        total_distance = subset['deltaDistMeters'].sum()
+        pct_of_total_ride = (subset['deltaDistMeters'].sum() / df['deltaDistMeters'].sum()) * 100
+        elevation_gain = subset[subset['deltaElevationMeters'] > 0]['deltaElevationMeters'].sum()
+        elevation_lost = subset[subset['deltaElevationMeters'] < 0]['deltaElevationMeters'].sum()
+        
+        # Save results
+        gradient_details.append({
+            'gradient_range': gr_range,
+            'total_distance': np.round(total_distance, 2),
+            'pct_of_total_ride': np.round(pct_of_total_ride, 2),
+            'elevation_gain': np.round(elevation_gain, 2),
+            'elevation_lost': np.round(np.abs(elevation_lost), 2)
+        })
+    gradient_details_df = pd.DataFrame(gradient_details).sort_values(by='gradient_range').reset_index(drop=True)
+    return gradient_details_df
 # Reading and parsing GPX file.
 gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Afternoon_Ride.gpx'
 gpxFile = GPXFile(gpx_file_path)
@@ -86,6 +127,9 @@ gpxDF = GroupSlopes(gpxDF)
 gpxDF = CumulativeElevationDistance(gpxDF)
 gpxDF = ElevationGradients(gpxDF)
 gpxDF["elevationGradients"] = gpxDF["elevationGradients"].fillna(0)
+gpxDF = GradientRangeTagging(gpxDF)
+
+gpxDF_RangeDetails = GradientRangeTagDetails(gpxDF)
 
 #### VISUALIZING ####
 
@@ -106,6 +150,9 @@ pio.renderers.default = "browser"
 # fig_ElevationTimeGraph.show()
 # fig_VelocityElevationCombined = visualizing.VelocityElevationCombined(gpxDF)
 # fig_VelocityElevationCombined.show()
+
+fig_GradientRangeGraph = visualizing.GradientRangeGraph(gpxDF_RangeDetails)
+fig_GradientRangeGraph.show()
 
 # fig_VelocityHeatMap = visualizing.VelocityHeatMap(gpxDF)
 # fig_VelocityHeatMap.show()

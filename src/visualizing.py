@@ -163,3 +163,33 @@ def ElevationMinMaxPoints(df):
                             marker=dict(color="green", size=10), 
                             name='Maximum Value'))
     return fig
+
+def GradientRangeGraph(df):
+    colors = [
+        '#0d46a0', '#2f3e9e', '#2195f2', '#4fc2f7',
+        '#a5d6a7', '#66bb6a', '#fff59d', '#ffee58',
+        '#ffca28', '#ffa000', '#ff6f00', '#f4511e', '#bf360c'
+    ]
+    custom_text = [f'''<b>{gr}%</b> - {dst}km''' for gr, dst in zip(
+        df['gradient_range'].astype('str'),
+        df['total_distance'].apply(lambda x: round(x / 1000, 2))
+    )]
+    fig = go.Figure(
+        data=[go.Bar(
+            x=df['gradient_range'].astype(str),
+            y=df['total_distance'].apply(lambda x: round(x / 1000, 2)),
+            marker_color=colors,
+            text=custom_text
+        )],
+        layout=go.Layout(
+            bargap=0,
+            title='Gradient profile of a route',
+            xaxis_title='Gradient range (%)',
+            yaxis_title='Distance covered (km)',
+            autosize=False,
+            width=1440,
+            height=800,
+            template='simple_white'
+        )
+    )
+    return fig
