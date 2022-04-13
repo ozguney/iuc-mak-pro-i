@@ -76,8 +76,7 @@ def GradientRangeTagging(df):
     (-10, -5), 
     (-5, -3), 
     (-3, -1), 
-    (-1, 0),
-    (0, 1), 
+    (-1, 1),
     (1, 3), 
     (3, 5), 
     (5, 7), 
@@ -168,7 +167,3 @@ fig_GradientRangeGraph.show()
 # fig_ElevationTimeGraph.write_html("fig_ElevationTimeGraph.html")
 # fig_VelocityElevationCombined.write_html("fig_VelocityElevationCombined.html")
 # fig_VelocityHeatMap.write_html("fig_VelocityHeatMap.html")
-
-#todo iki ma grafiği üst üste çizilmeli
-#kalman filtresi
-#eğimler
