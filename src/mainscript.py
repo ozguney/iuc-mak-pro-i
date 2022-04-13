@@ -85,7 +85,7 @@ def GradientRangeTagging(df):
     (10, 12), 
     (12, 15), 
     (15, 30)],
-    closed='left')
+    closed='right')
     df["gradientRange"] = pd.cut(df["elevationGradients"], bins=bins)
     return df
 def GradientRangeTagDetails(df):
@@ -128,7 +128,6 @@ gpxDF = CumulativeElevationDistance(gpxDF)
 gpxDF = ElevationGradients(gpxDF)
 gpxDF["elevationGradients"] = gpxDF["elevationGradients"].fillna(0)
 gpxDF = GradientRangeTagging(gpxDF)
-
 gpxDF_RangeDetails = GradientRangeTagDetails(gpxDF)
 
 #### VISUALIZING ####
