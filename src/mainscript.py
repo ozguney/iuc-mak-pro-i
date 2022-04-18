@@ -51,6 +51,9 @@ def GroupSlopes(df):
     n = 50 # number of points to be checked before and after
     df['min'] = df.iloc[argrelextrema(df.ele.values, np.less_equal,order=n)[0]]['ele']
     df['max'] = df.iloc[argrelextrema(df.ele.values, np.greater_equal,order=n)[0]]['ele']
+    # 
+    df = df[df['min'].shift() != df['min']]
+    df = df[df['max'].shift() != df['max']]
     return df
 def CumulativeElevationDistance(df):
     df["cumElevation"] = df["deltaElevationMeters"].cumsum()
@@ -79,11 +82,8 @@ def GradientRangeTagging(df):
     (-1, 1),
     (1, 3), 
     (3, 5), 
-    (5, 7), 
-    (7, 10), 
-    (10, 12), 
-    (12, 15), 
-    (15, 30)],
+    (5, 10), 
+    (10, 30)],
     closed='right')
     df["gradientRange"] = pd.cut(df["elevationGradients"], bins=bins)
     return df
@@ -149,14 +149,14 @@ pio.renderers.default = "browser"
 # fig_VelocityElevationCombined = visualizing.VelocityElevationCombined(gpxDF)
 # fig_VelocityElevationCombined.show()
 
-fig_GradientRangeGraph = visualizing.GradientRangeGraph(gpxDF_RangeDetails)
-fig_GradientRangeGraph.show()
+# fig_GradientRangeGraph = visualizing.GradientRangeGraph(gpxDF_RangeDetails)
+# fig_GradientRangeGraph.show()
 
 # fig_VelocityHeatMap = visualizing.VelocityHeatMap(gpxDF)
 # fig_VelocityHeatMap.show()
 
-# fig_ElevationMinMaxPoints = visualizing.ElevationMinMaxPoints(gpxDF)
-# fig_ElevationMinMaxPoints.show()
+fig_ElevationMinMaxPoints = visualizing.ElevationMinMaxPoints(gpxDF)
+fig_ElevationMinMaxPoints.show()
 
 #### WRITING ####
 
