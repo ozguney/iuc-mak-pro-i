@@ -51,9 +51,15 @@ def GroupSlopes(df):
     n = 50 # number of points to be checked before and after
     df['min'] = df.iloc[argrelextrema(df.ele.values, np.less_equal,order=n)[0]]['ele']
     df['max'] = df.iloc[argrelextrema(df.ele.values, np.greater_equal,order=n)[0]]['ele']
-    # 
-    df = df[df['min'].shift() != df['min']]
+    
+    df = df[df['min'].shift() != df['min']] # Dropping duplicated min max values
     df = df[df['max'].shift() != df['max']]
+
+    df_dumpmin = df.dropna(subset=['min']) # Dropping between values
+    df_dumpmax = df.dropna(subset=['max'])
+    df_dumpmin.index.tolist()
+    df_dumpmax.index.tolist()
+
     return df
 def CumulativeElevationDistance(df):
     df["cumElevation"] = df["deltaElevationMeters"].cumsum()
