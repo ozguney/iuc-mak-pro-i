@@ -136,10 +136,16 @@ def SingleSlopeGroups(df):
             'time_since_start': [],
             'time_elapsed': []
             }
-    ss_df = pd.DataFrame(data)
     
-    for index in indexes:
-        df.
+    for index in range(len(indexes)):
+        start_lat = df.iloc[indexes[index]]['lat']
+        start_lon = df.iloc[indexes[index]]['lon']
+        end_lat = df.iloc[indexes[index+1]]['lat']
+        end_lon = df.iloc[indexes[index+1]]['lon']
+        distance_covered = df.iloc[indexes[index+1]]['cumDistance']-df.iloc[indexes[index]]['cumDistance']
+
+
+    ss_df = pd.DataFrame(data)
     return df # This function returns every single slope group's dataframe for own purpose.
 # Reading and parsing GPX file.
 gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Afternoon_Ride.gpx'
