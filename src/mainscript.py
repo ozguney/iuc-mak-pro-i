@@ -175,7 +175,7 @@ gpxDF = GradientRangeTagging(gpxDF)
 gpxDF_RangeDetails = GradientRangeTagDetails(gpxDF)
 ssDF = SingleSlopeGroups(gpxDF)
 
-#### VISUALIZING ####
+#----- VISUALIZING --------------------------------------------------------------------#
 
 # pio.renderers.default = "notebook_connected"
 pio.renderers.default = "browser"
@@ -209,7 +209,10 @@ for i in range(len(ssDF)-1):   # for each row:
     plt.plot([ssDF.iloc[i,7],ssDF.iloc[i+1,7]],[ssDF.iloc[i,6],ssDF.iloc[i+1,6]])
 plt.show()
 
-#### WRITING ####
+#---------------------------------------------------------------------------------------#
+
+
+#----- WRITING -----#
 
 # fig_MapBox.write_html("fig_MapBox.html")
 # fig_Scatter3d.write_html("fig_Scatter3d.html")
@@ -218,3 +221,5 @@ plt.show()
 # fig_ElevationTimeGraph.write_html("fig_ElevationTimeGraph.html")
 # fig_VelocityElevationCombined.write_html("fig_VelocityElevationCombined.html")
 # fig_VelocityHeatMap.write_html("fig_VelocityHeatMap.html")
+
+#---------------------------------------------------------------------------------------#
