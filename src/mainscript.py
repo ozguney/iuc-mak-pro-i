@@ -12,6 +12,7 @@ from datetime import datetime
 from gpxpy.geo import *
 from gpxpy.gpx import *
 from scipy.signal import argrelextrema
+import matplotlib.pyplot as plt
 
 def dist_between(lat1, lon1, lat2, lon2):
     R = 6371e3 #metres
@@ -37,6 +38,7 @@ def DataFrameCalculations(df):
                                           df["deltaDistMeters"])
 
     df["deltaTimeSeconds"] = (df.loc[1:, 'time'] - df['time'].shift()).apply(lambda row: row.total_seconds())
+    df["cumTime"] = df["deltaTimeSeconds"].cumsum()
     df = df[df.deltaDistMeters != 0] # Deleting 0 meter rows
     df = df.reset_index(drop=True) # Resetting index values due to deleting 0 second rows
     df["velocityKmPerHour"] = df["deltaDistMeters"] / df["deltaTimeSeconds"] * (3600.0 / 1000)
@@ -127,26 +129,30 @@ def SingleSlopeGroups(df):
     indexes = df_dumpmin.index.tolist() + df_dumpmax.index.tolist()
     indexes.sort()
 
-    data = {'start_lat': [],
-            'start_lon': [],
-            'end_lat': [],
-            'end_lon': [],
-            'distance_covered': [],
-            'elevation_change': [],
-            'time_since_start': [],
-            'time_elapsed': []
-            }
+    single_slopes = []
     
-    for index in range(len(indexes)):
-        start_lat = df.iloc[indexes[index]]['lat']
-        start_lon = df.iloc[indexes[index]]['lon']
-        end_lat = df.iloc[indexes[index+1]]['lat']
-        end_lon = df.iloc[indexes[index+1]]['lon']
-        distance_covered = df.iloc[indexes[index+1]]['cumDistance']-df.iloc[indexes[index]]['cumDistance']
+    for i in range(len(indexes)-3):
+        start_lat = df.iloc[indexes[i]]['lat']
+        start_lon = df.iloc[indexes[i]]['lon']
+        end_lat = df.iloc[indexes[i+1]]['lat']
+        end_lon = df.iloc[indexes[i+1]]['lon']
+        distance_covered = df.iloc[indexes[i+1]]['cumDistance'] - df.iloc[indexes[i]]['cumDistance']
+        elevation_change = df.iloc[indexes[i+1]]['cumElevation'] - df.iloc[indexes[i]]['cumElevation']
+        time_since_start = df.iloc[indexes[i]]['cumTime']
+        time_elapsed = df.iloc[indexes[i+1]]['cumTime'] - df.iloc[indexes[i]]['cumTime']
 
-
-    ss_df = pd.DataFrame(data)
-    return df # This function returns every single slope group's dataframe for own purpose.
+        single_slopes.append({
+            'start_lat': start_lat,
+            'start_lon': start_lon,
+            'end_lat': end_lat,
+            'end_lon': end_lon,
+            'distance_covered': distance_covered,
+            'elevation_change': elevation_change,
+            'time_since_start': time_since_start,
+            'time_elapsed': time_elapsed
+        })
+    ss_df = pd.DataFrame(single_slopes)
+    return ss_df # This function returns every single slope group's dataframe for own purpose.
 # Reading and parsing GPX file.
 gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Afternoon_Ride.gpx'
 gpxFile = GPXFile(gpx_file_path)
@@ -165,6 +171,7 @@ gpxDF = ElevationGradients(gpxDF)
 gpxDF["elevationGradients"] = gpxDF["elevationGradients"].fillna(0)
 gpxDF = GradientRangeTagging(gpxDF)
 gpxDF_RangeDetails = GradientRangeTagDetails(gpxDF)
+ssDF = SingleSlopeGroups(gpxDF)
 
 #### VISUALIZING ####
 
