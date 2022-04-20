@@ -131,13 +131,14 @@ def SingleSlopeGroups(df):
 
     single_slopes = []
     
-    for i in range(len(indexes)-3):
+    for i in range(len(indexes)-3): # burada bir hata var
         start_lat = df.iloc[indexes[i]]['lat']
         start_lon = df.iloc[indexes[i]]['lon']
         end_lat = df.iloc[indexes[i+1]]['lat']
         end_lon = df.iloc[indexes[i+1]]['lon']
         distance_covered = df.iloc[indexes[i+1]]['cumDistance'] - df.iloc[indexes[i]]['cumDistance']
         elevation_change = df.iloc[indexes[i+1]]['cumElevation'] - df.iloc[indexes[i]]['cumElevation']
+        elevation = df.iloc[indexes[i]]['ele']
         time_since_start = df.iloc[indexes[i]]['cumTime']
         time_elapsed = df.iloc[indexes[i+1]]['cumTime'] - df.iloc[indexes[i]]['cumTime']
 
@@ -148,6 +149,7 @@ def SingleSlopeGroups(df):
             'end_lon': end_lon,
             'distance_covered': distance_covered,
             'elevation_change': elevation_change,
+            'elevation': elevation,
             'time_since_start': time_since_start,
             'time_elapsed': time_elapsed
         })
@@ -201,6 +203,11 @@ pio.renderers.default = "browser"
 
 fig_ElevationMinMaxPoints = visualizing.ElevationMinMaxPoints(gpxDF)
 fig_ElevationMinMaxPoints.show()
+
+for i in range(len(ssDF)-1):   # for each row:
+    # plt.plot([list of Xs], [list of Ys])
+    plt.plot([ssDF.iloc[i,7],ssDF.iloc[i+1,7]],[ssDF.iloc[i,6],ssDF.iloc[i+1,6]])
+plt.show()
 
 #### WRITING ####
 
