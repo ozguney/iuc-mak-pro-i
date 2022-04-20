@@ -54,12 +54,15 @@ def GroupSlopes(df):
     
     df = df[df['min'].shift() != df['min']] # Dropping duplicated min max values
     df = df[df['max'].shift() != df['max']]
-
+    '''
     df_dumpmin = df.dropna(subset=['min']) # Dropping between values
     df_dumpmax = df.dropna(subset=['max'])
     df_dumpmin.index.tolist()
     df_dumpmax.index.tolist()
-
+    dumplist = df_dumpmin.index.tolist() + df_dumpmax.index.tolist()
+    dumplist.sort()
+    df['selectedIndexes'] = pd.Series(dumplist)
+    '''
     return df
 def CumulativeElevationDistance(df):
     df["cumElevation"] = df["deltaElevationMeters"].cumsum()
@@ -116,6 +119,28 @@ def GradientRangeTagDetails(df):
         })
     gradient_details_df = pd.DataFrame(gradient_details).sort_values(by='gradient_range').reset_index(drop=True)
     return gradient_details_df
+def SingleSlopeGroups(df):
+    df_dumpmin = df.dropna(subset=['min'])
+    df_dumpmax = df.dropna(subset=['max'])
+    df_dumpmin.index.tolist()
+    df_dumpmax.index.tolist()
+    indexes = df_dumpmin.index.tolist() + df_dumpmax.index.tolist()
+    indexes.sort()
+
+    data = {'start_lat': [],
+            'start_lon': [],
+            'end_lat': [],
+            'end_lon': [],
+            'distance_covered': [],
+            'elevation_change': [],
+            'time_since_start': [],
+            'time_elapsed': []
+            }
+    ss_df = pd.DataFrame(data)
+    
+    for index in indexes:
+        df.
+    return df # This function returns every single slope group's dataframe for own purpose.
 # Reading and parsing GPX file.
 gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Afternoon_Ride.gpx'
 gpxFile = GPXFile(gpx_file_path)
