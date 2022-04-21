@@ -1,46 +1,63 @@
 import pandas as pd
 from math_calculations import *
-from pandas.core.base import PandasObject
 
 
-
-def DataFrameCalculations(df):
+def drop_time_duplicates(df):
     # Deleting duplicated times
     df.drop_duplicates(subset=['time'], keep=False)
+    # Reset index
+    df = df.reset_index(drop=True)
+    return df
+
+
+def delta_dist_meters(df):
     df["deltaDistMeters"] = haversine_distance(df['lat'].shift(),
                                                df['lon'].shift(),
                                                df.loc[1:, 'lat'],
                                                df.loc[1:, 'lon'])
+    return df
+
+
+def drop_zero_meter_displacements(df):
+    # Deleting 0 meter rows
+    df = df[df.deltaDistMeters != 0]
+    # Resetting index values due to deleting 0 second rows
+    df = df.reset_index(drop=True)
+    return df
+
+
+def delta_time_sec(df):
+    df["deltaTimeSeconds"] = (
+        df.loc[1:, 'time'] - df['time'].shift()).apply(lambda row: row.total_seconds())
+    return df
+
+
+def delta_ele_meters(df):
     df["deltaElevationMeters"] = df["ele"].diff()
+    return df
+
+
+def elevation_angle_df(df):
     df["elevationAngle"] = elevation_angle(df['ele'].shift(),
                                            df.loc[1:, 'ele'],
                                            df["deltaDistMeters"])
+    return df
 
-    df["deltaTimeSeconds"] = (
-        df.loc[1:, 'time'] - df['time'].shift()).apply(lambda row: row.total_seconds())
+
+def cumulative_time(df):
     df["cumTime"] = df["deltaTimeSeconds"].cumsum()
-    df = df[df.deltaDistMeters != 0]  # Deleting 0 meter rows
-    # Resetting index values due to deleting 0 second rows
-    df = df.reset_index(drop=True)
+    return df
+
+
+def velocity_kph(df):
     df["velocityKmPerHour"] = df["deltaDistMeters"] / \
         df["deltaTimeSeconds"] * (3600.0 / 1000)
     df = df[df.velocityKmPerHour < 50]
     df = df.reset_index(drop=True)
     return df
 
-def your_fun(df):
 
-    return df
-PandasObject.your_fun = your_fun
-
-def drop_time_duplicates(df):
-    # Deleting duplicated times
-    df.drop_duplicates(subset=['time'], keep=False)
-    df = df.reset_index(drop=True)
-    return df
-PandasObject.drop_time_duplicates = drop_time_duplicates
-
-def DataFrameSmoothing(df):
+def velocity_kph_moving_average(df):
     df["velocityKmPerHour_ma100"] = df["velocityKmPerHour"].rolling(
         window=100).mean()
     df["velocityKmPerHour_ma20"] = df["velocityKmPerHour"].rolling(
@@ -48,7 +65,7 @@ def DataFrameSmoothing(df):
     return df
 
 
-def GroupSlopes(df):
+def local_min_max(df):
     n = 50  # number of points to be checked before and after
     df['min'] = df.iloc[argrelextrema(
         df.ele.values, np.less_equal, order=n)[0]]['ele']
@@ -61,13 +78,18 @@ def GroupSlopes(df):
     return df
 
 
-def CumulativeElevationDistance(df):
+def cumulative_elevation(df):
     df["cumElevation"] = df["deltaElevationMeters"].cumsum()
+    return df
+
+
+def cumulative_distance(df):
     df["cumDistance"] = df["deltaDistMeters"].cumsum()
     return df
 
 
-def ElevationGradients(df):
+def calculate_gradients(df):
+    # This method also drops extreme values
     gradients = [np.nan]
     for ind, row in df.iterrows():
         if ind == 0:
@@ -85,7 +107,7 @@ def ElevationGradients(df):
     return df
 
 
-def GradientRangeTagging(df):
+def tag_gradient_ranges(df):
     bins = pd.IntervalIndex.from_tuples([
         (-30, -10),
         (-10, -5),
@@ -101,7 +123,8 @@ def GradientRangeTagging(df):
     return df
 
 
-def GradientRangeTagDetails(df):
+def gradient_details(df):
+    # This method returns of every single bins's percentages, ele gains-lose etc.
     gradient_details = []
 
     for gr_range in df['gradientRange'].unique():
@@ -130,7 +153,7 @@ def GradientRangeTagDetails(df):
     return gradient_details_df
 
 
-def SingleSlopeGroups(df):
+def listing_single_slopes(df):
     df_dumpmin = df.dropna(subset=['min'])
     df_dumpmax = df.dropna(subset=['max'])
     df_dumpmin.index.tolist()

@@ -12,9 +12,9 @@ gpxFile.print_info()
 # Converting to DataFrame.
 gpxDF = gpxFile.get_gpx_dataframe()
 # gpxDF_10 = gpxDF[gpxDF.index % 10 == 0] # Getting 1 row from every 10 row. Make calculations more smooth
-a=3
+
 # Calculating speed, distance etc.
-# gpxDF.drop_time_duplicates()
+# 
 # gpxDF = DataFrameCalculations(gpxDF)
 # gpxDF = DataFrameSmoothing(gpxDF)
 # gpxDF = GroupSlopes(gpxDF)
@@ -54,6 +54,8 @@ pio.renderers.default = "browser"
 # fig_ElevationMinMaxPoints = ElevationMinMaxPoints(gpxDF)
 # fig_ElevationMinMaxPoints.show()
 
+
+# SIRALAMA DEGISTIGI ICIN BU ISLEVSIZ KALACAKTIR ILOC YERINE LOC KULLANILMALI
 # for i in range(len(ssDF)-1):   # for each row:
 #     # plt.plot([list of Xs], [list of Ys])
 #     plt.plot([ssDF.iloc[i, 7], ssDF.iloc[i+1, 7]],
