@@ -115,7 +115,7 @@ def tag_gradient_ranges(df):
 
 
 def gradient_details(df):
-    # This method returns of every single bins's percentages, ele gains-lose etc.
+    # This method returns another dataframe of every single bins's percentages, ele gains-lose etc.
     gradient_details = []
 
     for gr_range in df['gradientRange'].unique():
@@ -184,3 +184,32 @@ def listing_single_slopes(df):
     ss_df = pd.DataFrame(single_slopes)
     # This function returns every single slope group's dataframe as a list with their information.
     return ss_df
+
+
+def all_operations(df):
+    '''
+    Returns list of DataFrames.
+        gpxDF: GPX dataframe.
+        grDF : Gradient range dataframe.
+        ssDF : Single slope list's dataframe.
+    '''
+    gpxDF = drop_time_duplicates(df)
+    gpxDF = delta_dist_meters(gpxDF)
+    gpxDF = drop_zero_meter_displacements(gpxDF)
+    gpxDF = delta_time_sec(gpxDF)
+    gpxDF = delta_ele_meters(gpxDF)
+    gpxDF = cumulative_time(gpxDF)
+    gpxDF = velocity_kph(gpxDF)
+    gpxDF = local_min_max(gpxDF)
+    gpxDF = cumulative_elevation(gpxDF)
+    gpxDF = cumulative_distance(gpxDF)
+    gpxDF = calculate_gradients(gpxDF)
+
+    #tekrar?
+
+    gpxDF = tag_gradient_ranges(gpxDF)
+    grDF = gradient_details(gpxDF)
+    ssDF = listing_single_slopes(gpxDF)
+    gpxDF = velocity_kph_moving_average(gpxDF)
+
+    return [gpxDF, grDF, ssDF]
