@@ -37,13 +37,6 @@ def delta_ele_meters(df):
     return df
 
 
-def elevation_angle_df(df):
-    df["elevationAngle"] = elevation_angle(df['ele'].shift(),
-                                           df.loc[1:, 'ele'],
-                                           df["deltaDistMeters"])
-    return df
-
-
 def cumulative_time(df):
     df["cumTime"] = df["deltaTimeSeconds"].cumsum()
     return df
@@ -150,19 +143,21 @@ def gradient_details(df):
         })
     gradient_details_df = pd.DataFrame(gradient_details).sort_values(
         by='gradient_range').reset_index(drop=True)
+    # This returns another dataframe
     return gradient_details_df
 
 
 def listing_single_slopes(df):
+    # Min, max values parsed.
     df_dumpmin = df.dropna(subset=['min'])
     df_dumpmax = df.dropna(subset=['max'])
-    df_dumpmin.index.tolist()
-    df_dumpmax.index.tolist()
+    # All min, max values added to "indexes" variable.
     indexes = df_dumpmin.index.tolist() + df_dumpmax.index.tolist()
+    # Indexes sorted in ascending order.
     indexes.sort()
-
     single_slopes = []
 
+    # Statistics
     for i in range(len(indexes)-1):
         start_lat = df.iloc[indexes[i]]['lat']
         start_lon = df.iloc[indexes[i]]['lon']
@@ -176,7 +171,7 @@ def listing_single_slopes(df):
         time_since_start = df.iloc[indexes[i]]['cumTime']
         time_elapsed = df.iloc[indexes[i+1]]['cumTime'] - \
             df.iloc[indexes[i]]['cumTime']
-
+    # Save results
         single_slopes.append({
             'start_lat': start_lat,
             'start_lon': start_lon,
@@ -189,5 +184,5 @@ def listing_single_slopes(df):
             'time_elapsed': time_elapsed
         })
     ss_df = pd.DataFrame(single_slopes)
-    # This function returns every single slope group's dataframe for own purpose.
+    # This function returns every single slope group's dataframe as a list with their information.
     return ss_df
