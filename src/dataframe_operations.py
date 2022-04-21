@@ -83,7 +83,7 @@ def cumulative_distance(df):
 
 def calculate_gradients(df):
     # This method also drops extreme values
-    gradients = [np.nan]
+    gradients = [0]
     for ind, row in df.iterrows():
         if ind == 0:
             continue
@@ -95,6 +95,8 @@ def calculate_gradients(df):
         else:
             gradients.append(np.round(grade, 1))
     df["elevationGradients"] = gradients
+    # Resetting index values due to deleting nan rows
+    df = df.reset_index(drop=True)
     return df
 
 
@@ -118,7 +120,7 @@ def gradient_details(df):
     # This method returns another dataframe of every single bins's percentages, ele gains-lose etc.
     gradient_details = []
 
-    for gr_range in df['gradientRange'].unique():
+    for gr_range in df['gradientRange'].dropna().unique():
         # Keep that subset only
         subset = df[df['gradientRange'] == gr_range]
 
@@ -189,9 +191,9 @@ def listing_single_slopes(df):
 def all_operations(df):
     '''
     Returns list of DataFrames.
-        gpxDF: GPX dataframe.
-        grDF : Gradient range dataframe.
-        ssDF : Single slope list's dataframe.
+        (0)gpxDF: GPX dataframe.
+        (1)grDF : Gradient range dataframe.
+        (2)ssDF : Single slope list's dataframe.
     '''
     gpxDF = drop_time_duplicates(df)
     gpxDF = delta_dist_meters(gpxDF)
@@ -204,12 +206,9 @@ def all_operations(df):
     gpxDF = cumulative_elevation(gpxDF)
     gpxDF = cumulative_distance(gpxDF)
     gpxDF = calculate_gradients(gpxDF)
-
-    # tekrar?
-
     gpxDF = tag_gradient_ranges(gpxDF)
+    gpxDF = velocity_kph_moving_average(gpxDF)  
     grDF = gradient_details(gpxDF)
     ssDF = listing_single_slopes(gpxDF)
-    gpxDF = velocity_kph_moving_average(gpxDF)
 
     return [gpxDF, grDF, ssDF]
