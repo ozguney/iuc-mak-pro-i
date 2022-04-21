@@ -5,18 +5,39 @@ from visualization import *
 from math_calculations import *
 from dataframe_operations import *
 
+# Directory: ..\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files'
+gpx_folder = os.path.abspath("gpx_files")
 
-# Directory operations
-gpx_file_path = 'C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files\\Afternoon_Ride.gpx'
-gpxFile = GPXFile(gpx_file_path)
-gpxFile.print_info()
+# All gpx files in the gpx_files folder.
+gpx_file_list = os.listdir(gpx_folder)
 
-# Converting to DataFrame.
-gpxDF = gpxFile.get_gpx_dataframe()
+# Creating empty DataFrame list
+ssDF_list = []
 
-# Calculating all DataFrames.
-gpxDF, grDF, ssDF = all_operations(gpxDF)
+for i in range(len(gpx_file_list)):
+    gpxFile = GPXFile(os.path.join(gpx_folder, gpx_file_list[i]))
+    gpxFile.print_info()
+    try:
+        # Converting to DataFrame.
+        gpxDF = gpxFile.get_gpx_dataframe()
+    except Exception:
+        print(gpx_file_list[i]," has no time variable.")
+        continue
+    # Calculating all DataFrames.
+    gpxDF, grDF, ssDF = all_operations(gpxDF)
+    # Every ssDF DataFrame is going to append to a list
+    ssDF_list.append(ssDF)
 
+# Combine all single slope dataframes into one DataFrame.
+ssDF_csv = pd.concat(ssDF_list, ignore_index=True)
 
+# Writing
+output_folder = os.path.abspath("output")
 
+# Writing Single Slope DataFrame to a CSV file. Exporting to ..\Documents\\GitHub\\iuc-mak-pro-i\\output
+ssDF_csv.to_csv(os.path.join(
+    output_folder, r'single_slope_dataframe.csv'), encoding='utf-8')
 
+# TODO try catch yapılanması (zaman olmayan GPX dosyaları için) - balaban turu
+# TODO visualizing scriptinin düzenlenmesi. son csv dosyasının dünya haritasında işlenmesi
+# TODO write scriptinin düzenlenmesi. içerisine html harita çıktılarının da eklenmesi.
