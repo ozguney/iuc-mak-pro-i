@@ -1,41 +1,12 @@
-import pandas as pd  # pandas 1.3.5
-import numpy as np  # numpy 1.22.2
-import gpxpy
-import gpxpy.gpx
-import matplotlib.pyplot as plt
-import plotly.graph_objects as go
-import plotly.express as px
-import plotly.io as pio
-import visualization
-import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+from visualization import *
+from math_calculations import *
+from dataframe_operations import *
+
 from gpx_file_reader import GPXFile
-from datetime import datetime
-from gpxpy.gpx import *
-from scipy.signal import argrelextrema
 
-
-def haversine_distance(latitude_1, longitude_1, latitude_2, longitude_2):
-    """
-    Updated "math" library to "numpy". Due to dataframe calculation problems.
-    Haversine distance between two points, expressed in meters.
-    Implemented from http://www.movable-type.co.uk/scripts/latlong.html
-    """
-    EARTH_RADIUS = 6378.137 * 1000
-    d_lon = np.radians(longitude_1 - longitude_2)
-    lat1 = np.radians(latitude_1)
-    lat2 = np.radians(latitude_2)
-    d_lat = lat1 - lat2
-
-    a = np.power(np.sin(d_lat/2), 2) + \
-        np.power(np.sin(d_lon/2), 2) * np.cos(lat1) * np.cos(lat2)
-    c = 2 * np.arcsin(np.sqrt(a))
-    d = EARTH_RADIUS * c
-
-    return d
-
-
-def ElevationAngle(ele1, ele2, distance):
-    return np.arctan((ele2-ele1)/distance)
 
 
 def DataFrameCalculations(df):
