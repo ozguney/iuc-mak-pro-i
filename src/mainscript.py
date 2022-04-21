@@ -7,12 +7,32 @@ import plotly.graph_objects as go
 import plotly.express as px
 import plotly.io as pio
 import visualizing
+import matplotlib.pyplot as plt
 from gpx_file_reader import GPXFile
 from datetime import datetime
-from gpxpy.geo import *
 from gpxpy.gpx import *
 from scipy.signal import argrelextrema
-import matplotlib.pyplot as plt
+
+
+def haversine_distance(latitude_1, longitude_1, latitude_2, longitude_2):
+    """
+    Updated "math" library to "numpy". Due to dataframe calculation problems.
+    Haversine distance between two points, expressed in meters.
+    Implemented from http://www.movable-type.co.uk/scripts/latlong.html
+    """
+    EARTH_RADIUS = 6378.137 * 1000
+    d_lon = np.radians(longitude_1 - longitude_2)
+    lat1 = np.radians(latitude_1)
+    lat2 = np.radians(latitude_2)
+    d_lat = lat1 - lat2
+
+    a = np.power(np.sin(d_lat/2), 2) + \
+        np.power(np.sin(d_lon/2), 2) * np.cos(lat1) * np.cos(lat2)
+    c = 2 * np.arcsin(np.sqrt(a))
+    d = EARTH_RADIUS * c
+
+    return d
+
 
 def ElevationAngle(ele1, ele2, distance):
     return np.arctan((ele2-ele1)/distance)
@@ -22,9 +42,9 @@ def DataFrameCalculations(df):
     # Deleting duplicated times
     df.drop_duplicates(subset=['time'], keep=False)
     df["deltaDistMeters"] = haversine_distance(df['lat'].shift(),
-                                         df['lon'].shift(),
-                                         df.loc[1:, 'lat'],
-                                         df.loc[1:, 'lon'])
+                                               df['lon'].shift(),
+                                               df.loc[1:, 'lat'],
+                                               df.loc[1:, 'lon'])
     df["deltaElevationMeters"] = df["ele"].diff()
     df["elevationAngle"] = ElevationAngle(df['ele'].shift(),
                                           df.loc[1:, 'ele'],
