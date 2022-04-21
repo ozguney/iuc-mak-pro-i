@@ -205,7 +205,7 @@ def all_operations(df):
     gpxDF = cumulative_distance(gpxDF)
     gpxDF = calculate_gradients(gpxDF)
 
-    #tekrar?
+    # tekrar?
 
     gpxDF = tag_gradient_ranges(gpxDF)
     grDF = gradient_details(gpxDF)
