@@ -207,7 +207,7 @@ def all_operations(df):
     gpxDF = cumulative_distance(gpxDF)
     gpxDF = calculate_gradients(gpxDF)
     gpxDF = tag_gradient_ranges(gpxDF)
-    gpxDF = velocity_kph_moving_average(gpxDF)  
+    gpxDF = velocity_kph_moving_average(gpxDF)
     grDF = gradient_details(gpxDF)
     ssDF = listing_single_slopes(gpxDF)
 

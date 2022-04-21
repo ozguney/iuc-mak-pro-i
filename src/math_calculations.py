@@ -21,5 +21,6 @@ def haversine_distance(latitude_1, longitude_1, latitude_2, longitude_2):
 
     return d
 
+
 def elevation_angle(ele1, ele2, distance):
     return np.arctan((ele2-ele1)/distance)
