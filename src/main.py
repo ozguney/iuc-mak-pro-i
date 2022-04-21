@@ -11,31 +11,9 @@ gpxFile.print_info()
 
 # Converting to DataFrame.
 gpxDF = gpxFile.get_gpx_dataframe()
-print("Dataframe succesfully created by GPX file.")
 
-all_dataframes = all_operations(gpxDF)
-
-gpxDF = all_dataframes[0]
-grDF = all_dataframes[1]
-ssDF = all_dataframes[2]
-
-gpxDF
-grDF
-ssDF
-
-# gpxDF_10 = gpxDF[gpxDF.index % 10 == 0] # Getting 1 row from every 10 row. Make calculations more smooth
-
-# Calculating speed, distance etc.
-# 
-# gpxDF = DataFrameCalculations(gpxDF)
-# gpxDF = DataFrameSmoothing(gpxDF)
-# gpxDF = GroupSlopes(gpxDF)
-# gpxDF = CumulativeElevationDistance(gpxDF)
-# gpxDF = ElevationGradients(gpxDF)
-# gpxDF["elevationGradients"] = gpxDF["elevationGradients"].fillna(0)
-# gpxDF = GradientRangeTagging(gpxDF)
-# gpxDF_RangeDetails = GradientRangeTagDetails(gpxDF)
-# ssDF = SingleSlopeGroups(gpxDF)
+# Calculating all DataFrames.
+gpxDF, grDF, ssDF = all_operations(gpxDF)
 
 #----- visualization --------------------------------------------------------------------#
 
