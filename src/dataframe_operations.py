@@ -95,8 +95,6 @@ def calculate_gradients(df):
         else:
             gradients.append(np.round(grade, 1))
     df["elevationGradients"] = gradients
-    # Resetting index values due to deleting nan rows
-    df = df.reset_index(drop=True)
     return df
 
 
@@ -151,7 +149,7 @@ def listing_single_slopes(df):
     # Min, max values parsed.
     df_dumpmin = df.dropna(subset=['min'])
     df_dumpmax = df.dropna(subset=['max'])
-    # All min, max values added to "indexes" variable.
+    # All min, max values's indexes added to "indexes" variable.
     indexes = df_dumpmin.index.tolist() + df_dumpmax.index.tolist()
     # Indexes sorted in ascending order.
     indexes.sort()
