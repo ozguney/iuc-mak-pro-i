@@ -56,15 +56,6 @@ def GroupSlopes(df):
     
     df = df[df['min'].shift() != df['min']] # Dropping duplicated min max values
     df = df[df['max'].shift() != df['max']]
-    '''
-    df_dumpmin = df.dropna(subset=['min']) # Dropping between values
-    df_dumpmax = df.dropna(subset=['max'])
-    df_dumpmin.index.tolist()
-    df_dumpmax.index.tolist()
-    dumplist = df_dumpmin.index.tolist() + df_dumpmax.index.tolist()
-    dumplist.sort()
-    df['selectedIndexes'] = pd.Series(dumplist)
-    '''
     return df
 def CumulativeElevationDistance(df):
     df["cumElevation"] = df["deltaElevationMeters"].cumsum()
@@ -83,6 +74,7 @@ def ElevationGradients(df):
         else:
             gradients.append(np.round(grade, 1))
     df["elevationGradients"] = gradients
+    df = df.reset_index(drop=True) # Resetting index values due to deleting nan rows
     return df
 def GradientRangeTagging(df):
     bins = pd.IntervalIndex.from_tuples([
@@ -131,7 +123,7 @@ def SingleSlopeGroups(df):
 
     single_slopes = []
     
-    for i in range(len(indexes)-3): # burada bir hata var
+    for i in range(len(indexes)-1):
         start_lat = df.iloc[indexes[i]]['lat']
         start_lon = df.iloc[indexes[i]]['lon']
         end_lat = df.iloc[indexes[i+1]]['lat']
