@@ -17,9 +17,12 @@ ssDF_list = []
 for i in range(len(gpx_file_list)):
     gpxFile = GPXFile(os.path.join(gpx_folder, gpx_file_list[i]))
     gpxFile.print_info()
-    # Converting to DataFrame.
-    gpxDF = gpxFile.get_gpx_dataframe()
-    print(gpx_file_list[i]," has no time variable.")
+    try:
+        # Converting to DataFrame.
+        gpxDF = gpxFile.get_gpx_dataframe()
+    except Exception:
+        print(gpx_file_list[i]," has no time variable.")
+        continue
     # Calculating all DataFrames.
     gpxDF, grDF, ssDF = all_operations(gpxDF)
     # Every ssDF DataFrame is going to append to a list
