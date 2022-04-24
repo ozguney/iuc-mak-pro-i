@@ -22,12 +22,16 @@ total_ride_count = ssDF['ride_index'].iloc[-1]
 fig = make_subplots(rows=int(total_ride_count), cols=1)
 
 for i in ssDF['ride_index'].unique():
+    tour_name = "Tour " + str(i)
     fig.append_trace(go.Scatter(
         x=ssDF[ssDF['ride_index'] == i]['time_since_start'],
         y=ssDF[ssDF['ride_index'] == i]['elevation'],
+        name=tour_name
     ), row=i, col=1)
-fig.update_layout(height=600*total_ride_count)
-
+    # Updating every single subplot's axes information.
+    fig.update_xaxes(title_text='Time (second)', row=i, col=1)
+    fig.update_yaxes(title_text='Elevation (meter)', row=i, col=1)
+fig.update_layout(height=600*total_ride_count, title_text="All Tour Graphs in One (Elevation-Time)")
 
 #fig.update_layout(height=600, width=600, title_text="Stacked Subplots")
 fig.show()

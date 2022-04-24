@@ -11,9 +11,12 @@ gpx_folder = os.path.abspath("gpx_files")
 # All gpx files in the gpx_files folder.
 gpx_file_list = os.listdir(gpx_folder)
 
-# Creating empty DataFrame list
-ssDF_list = []
+# Creating empty lists
+ssDF_list, no_time_info_file_list = [], []
+
+# Ride index used to index each file in ssDF.
 ride_index = 1
+
 for i in range(len(gpx_file_list)):
     gpxFile = GPXFile(os.path.join(gpx_folder, gpx_file_list[i]))
     print(f"Analyzing: {gpx_file_list[i]}")
@@ -21,7 +24,7 @@ for i in range(len(gpx_file_list)):
     if gpxDF.empty:
         print(
             f"ERROR: This file dont have time component. This GPX file will not be processed: {gpx_file_list[i]}")
-        continue
+        no_time_info_file_list.append(gpx_file_list[i])
     else:
         # Calculating all DataFrames.
         gpxDF, grDF, ssDF = all_operations(gpxDF)
@@ -32,10 +35,13 @@ for i in range(len(gpx_file_list)):
         ssDF_list.append(ssDF)
         print("Analysis finished succesfully.")
 
+# Debugging...
+print(f"These files were not processed because they do not contain time information: {no_time_info_file_list}")
+
 # Combine all single slope dataframesss into one DataFrame.
 ssDF_csv = pd.concat(ssDF_list, ignore_index=True)
 
-# Writing
+# Writing to file.
 output_folder = os.path.abspath("output")
 
 # Writing Single Slope DataFrame to a CSV file. Exporting to ..\Documents\\GitHub\\iuc-mak-pro-i\\output

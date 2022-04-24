@@ -5,7 +5,7 @@ from math_calculations import *
 
 
 def drop_time_duplicates(df):
-    # Deleting duplicated times
+    # Deleting duplicated time informations
     df.drop_duplicates(subset=['time'], keep=False)
     # Reset index
     df = df.reset_index(drop=True)
@@ -178,6 +178,7 @@ def listing_single_slopes(df):
         elevation_change = df.iloc[indexes[i+1]
                                    ]['cumElevation'] - df.iloc[indexes[i]]['cumElevation']
         elevation = df.iloc[indexes[i]]['ele']
+
         if i == 0:
             time_since_start = 0
             time_elapsed = df.iloc[indexes[i+1]]['cumTime']
@@ -187,6 +188,7 @@ def listing_single_slopes(df):
                 df.iloc[indexes[i]]['cumTime']
     # Save results
         single_slopes.append({
+            # TODO average velocity, ele gain, ele loss, pct of total ride,
             'start_lat': start_lat,
             'start_lon': start_lon,
             'end_lat': end_lat,
