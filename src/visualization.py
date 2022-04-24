@@ -208,6 +208,7 @@ def GradientRangeGraph(df):
 
 #----- visualization --------------------------------------------------------------------#
 
+
 # pio.renderers.default = "notebook_connected"
 pio.renderers.default = "browser"
 
