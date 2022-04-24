@@ -48,6 +48,5 @@ output_folder = os.path.abspath("output")
 ssDF_csv.to_csv(os.path.join(
     output_folder, r'single_slope_dataframe.csv'), encoding='utf-8', index=False)
 
-# TODO try catch yapılanması (zaman olmayan GPX dosyaları için) - balaban turu
 # TODO visualizing scriptinin düzenlenmesi. son csv dosyasının dünya haritasında işlenmesi
 # TODO write scriptinin düzenlenmesi. içerisine html harita çıktılarının da eklenmesi.

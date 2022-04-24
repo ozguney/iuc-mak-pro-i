@@ -37,8 +37,7 @@ def drop_zero_meter_displacements(df):
 
 
 def delta_time_sec(df):
-    df["deltaTimeSeconds"] = (
-        df.loc[1:, 'time'] - df['time'].shift()).apply(lambda row: row.total_seconds())
+    df["deltaTimeSeconds"] = (df.loc[1:, 'time'] - df['time'].shift()).apply(lambda row: row.total_seconds())
     return df
 
 
@@ -53,27 +52,22 @@ def cumulative_time(df):
 
 
 def velocity_kph(df):
-    df["velocityKmPerHour"] = df["deltaDistMeters"] / \
-        df["deltaTimeSeconds"] * (3600.0 / 1000)
+    df["velocityKmPerHour"] = df["deltaDistMeters"] / df["deltaTimeSeconds"] * (3600.0 / 1000)
     df = df[df.velocityKmPerHour < 50]
     df = df.reset_index(drop=True)
     return df
 
 
 def velocity_kph_moving_average(df):
-    df["velocityKmPerHour_ma100"] = df["velocityKmPerHour"].rolling(
-        window=100).mean()
-    df["velocityKmPerHour_ma20"] = df["velocityKmPerHour"].rolling(
-        window=20).mean()
+    df["velocityKmPerHour_ma100"] = df["velocityKmPerHour"].rolling(window=100).mean()
+    df["velocityKmPerHour_ma20"] = df["velocityKmPerHour"].rolling(window=20).mean()
     return df
 
 
 def local_min_max(df):
     n = 50  # number of points to be checked before and after
-    df['min'] = df.iloc[argrelextrema(
-        df.ele.values, np.less_equal, order=n)[0]]['ele']
-    df['max'] = df.iloc[argrelextrema(
-        df.ele.values, np.greater_equal, order=n)[0]]['ele']
+    df['min'] = df.iloc[argrelextrema(df.ele.values, np.less_equal, order=n)[0]]['ele']
+    df['max'] = df.iloc[argrelextrema(df.ele.values, np.greater_equal, order=n)[0]]['ele']
 
     # Dropping duplicated min max values
     df = df[df['min'].shift() != df['min']]
@@ -151,8 +145,7 @@ def gradient_details(df):
             'elevation_gain': np.round(elevation_gain, 2),
             'elevation_lost': np.round(np.abs(elevation_lost), 2)
         })
-    gradient_details_df = pd.DataFrame(gradient_details).sort_values(
-        by='gradient_range').reset_index(drop=True)
+    gradient_details_df = pd.DataFrame(gradient_details).sort_values(by='gradient_range').reset_index(drop=True)
     # This returns another dataframe
     return gradient_details_df
 
@@ -173,22 +166,25 @@ def listing_single_slopes(df):
         start_lon = df.iloc[indexes[i]]['lon']
         end_lat = df.iloc[indexes[i+1]]['lat']
         end_lon = df.iloc[indexes[i+1]]['lon']
-        distance_covered = df.iloc[indexes[i+1]
-                                   ]['cumDistance'] - df.iloc[indexes[i]]['cumDistance']
-        elevation_change = df.iloc[indexes[i+1]
-                                   ]['cumElevation'] - df.iloc[indexes[i]]['cumElevation']
+        distance_covered = df.iloc[indexes[i+1]]['cumDistance'] - df.iloc[indexes[i]]['cumDistance']
+        elevation_change = df.iloc[indexes[i+1]]['cumElevation'] - df.iloc[indexes[i]]['cumElevation']
         elevation = df.iloc[indexes[i]]['ele']
+
+        pct_of_total_ride = (df['deltaDistMeters'].iloc[indexes[i]:indexes[i+1]
+                                                        ].sum() / df['deltaDistMeters'].sum()) * 100
+        elevation_gain = df.iloc[indexes[i]:indexes[i+1]][df['deltaElevationMeters'] > 0]['deltaElevationMeters'].sum()
+        elevation_lost = df.iloc[indexes[i]:indexes[i+1]][df['deltaElevationMeters'] < 0]['deltaElevationMeters'].sum()
 
         if i == 0:
             time_since_start = 0
             time_elapsed = df.iloc[indexes[i+1]]['cumTime']
         else:
             time_since_start = df.iloc[indexes[i]]['cumTime']
-            time_elapsed = df.iloc[indexes[i+1]]['cumTime'] - \
-                df.iloc[indexes[i]]['cumTime']
+            time_elapsed = df.iloc[indexes[i+1]]['cumTime'] - df.iloc[indexes[i]]['cumTime']
+        avg_velocity_kmh = (distance_covered/time_elapsed) * (3600.0 / 1000)
+
     # Save results
         single_slopes.append({
-            # TODO average velocity, ele gain, ele loss, pct of total ride,
             'start_lat': start_lat,
             'start_lon': start_lon,
             'end_lat': end_lat,
@@ -197,7 +193,11 @@ def listing_single_slopes(df):
             'elevation_change': elevation_change,
             'elevation': elevation,
             'time_since_start': time_since_start,
-            'time_elapsed': time_elapsed
+            'time_elapsed': time_elapsed,
+            'pct_of_total_ride': pct_of_total_ride,
+            'elevation_gain': elevation_gain,
+            'elevation_lost': elevation_lost,
+            'avg_velocity_kmh': avg_velocity_kmh
         })
     ss_df = pd.DataFrame(single_slopes)
     # This function returns every single slope group's dataframe as a list with their information.
