@@ -11,12 +11,15 @@ def drop_time_duplicates(df):
     df = df.reset_index(drop=True)
     return df
 
-
-def delta_dist_meters(df):
+def define_data_type(df):
     df['lat'] = df['lat'].astype(float)
     df['lon'] = df['lon'].astype(float)
     df['ele'] = df['ele'].astype(float)
     df['time'] = df['time'].astype(datetime64)
+    return df
+
+
+def delta_dist_meters(df):
     df["deltaDistMeters"] = haversine_distance(df['lat'].shift(),
                                                df['lon'].shift(),
                                                df.loc[1:, 'lat'],
@@ -202,6 +205,7 @@ def all_operations(df):
         (2)ssDF : Single slope list's dataframe.
     '''
     gpxDF = drop_time_duplicates(df)
+    gpxDF = define_data_type(gpxDF)
     gpxDF = delta_dist_meters(gpxDF)
     gpxDF = drop_zero_meter_displacements(gpxDF)
     gpxDF = delta_time_sec(gpxDF)
