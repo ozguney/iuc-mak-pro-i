@@ -19,7 +19,8 @@ for i in range(len(gpx_file_list)):
     print(f"Analyzing: {gpx_file_list[i]}")
     gpxDF = gpxFile.get_gpx_dataframe()
     if gpxDF.empty:
-        print(f"ERROR: This file dont have time component. This GPX file will not be processed: {gpx_file_list[i]}")
+        print(
+            f"ERROR: This file dont have time component. This GPX file will not be processed: {gpx_file_list[i]}")
         continue
     else:
         # Calculating all DataFrames.

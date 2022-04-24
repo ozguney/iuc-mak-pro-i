@@ -11,6 +11,7 @@ def drop_time_duplicates(df):
     df = df.reset_index(drop=True)
     return df
 
+
 def define_data_type(df):
     df['lat'] = df['lat'].astype(float)
     df['lon'] = df['lon'].astype(float)

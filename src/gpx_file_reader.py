@@ -10,10 +10,8 @@ class GPXFile:
         self.xml_element_prefix = gpx_schema_doc_site
         self.gpx_root = self.get_gpx_root(self.gpx_file_path)
         if self.check_for_time() is True:
-
             self.gpxColumns = ["lat", "lon", "ele", "time"]
             self.gpxDF = pd.DataFrame(columns=self.gpxColumns)
-
             self.parse()
         else:
             self.gpxDF = pd.DataFrame({'Empty': []})
