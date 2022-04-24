@@ -1,3 +1,5 @@
+from datetime import datetime
+from numpy import datetime64
 import pandas as pd
 from math_calculations import *
 
@@ -11,14 +13,10 @@ def drop_time_duplicates(df):
 
 
 def delta_dist_meters(df):
-<<<<<<< HEAD
-    
     df['lat'] = df['lat'].astype(float)
     df['lon'] = df['lon'].astype(float)
     df['ele'] = df['ele'].astype(float)
     df['time'] = df['time'].astype(datetime64)
-=======
->>>>>>> parent of f08bde9 (fix v1)
     df["deltaDistMeters"] = haversine_distance(df['lat'].shift(),
                                                df['lon'].shift(),
                                                df.loc[1:, 'lat'],
