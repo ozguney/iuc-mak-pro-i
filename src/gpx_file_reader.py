@@ -9,8 +9,11 @@ class GPXFile:
         self.gpx_file_path = gpx_file_path
         self.xml_element_prefix = gpx_schema_doc_site
         self.gpx_root = self.get_gpx_root(self.gpx_file_path)
-        if self.check_for_time() is True:
+        
+        self.gpxColumns = ["lat", "lon", "ele", "time"]
+        self.gpxDF = pd.DataFrame(columns = self.gpxColumns)
 
+<<<<<<< HEAD
             self.gpxColumns = ["lat", "lon", "ele", "time"]
             self.gpxDF = pd.DataFrame(columns=self.gpxColumns)
 
@@ -29,6 +32,10 @@ class GPXFile:
         else:
             return True
 
+=======
+        self.parse()
+
+>>>>>>> parent of f08bde9 (fix v1)
     def get_gpx_root(self, gpx_file_path):
         tree = ET.parse(gpx_file_path)
         root = tree.getroot()
@@ -64,3 +71,12 @@ class GPXFile:
     def print_info(self):
         self.gpxDF.info()
         print("preview:\n", self.gpxDF[:10])
+<<<<<<< HEAD
+=======
+
+if __name__=="__main__":
+    #parse_gpx()
+    gpx_file_path = "20210808_181500_amtrak_dc_to_nyc.gpx"
+    gpx_file = GPXFile(gpx_file_path)
+    gpx_file.print_info()
+>>>>>>> parent of f08bde9 (fix v1)
