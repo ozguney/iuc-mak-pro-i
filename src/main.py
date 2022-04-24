@@ -16,18 +16,17 @@ ssDF_list = []
 
 for i in range(len(gpx_file_list)):
     gpxFile = GPXFile(os.path.join(gpx_folder, gpx_file_list[i]))
-    print("\n", gpx_file_list[i], " is analyzing...")
+    print(f"Analyzing: {gpx_file_list[i]}")
     gpxDF = gpxFile.get_gpx_dataframe()
     if gpxDF.empty:
-        print(
-            gpx_file_list[i], "dont have any time component. This GPX file will not be processed.")
+        print(f"ERROR: This file dont have time component. This GPX file will not be processed: {gpx_file_list[i]}")
         continue
     else:
         # Calculating all DataFrames.
         gpxDF, grDF, ssDF = all_operations(gpxDF)
         # Every ssDF DataFrame is going to append to a list
         ssDF_list.append(ssDF)
-        print(gpx_file_list[i], " process is succesfully completed.")
+        print("Analysis finished succesfully.")
 
 # Combine all single slope dataframesss into one DataFrame.
 ssDF_csv = pd.concat(ssDF_list, ignore_index=True)

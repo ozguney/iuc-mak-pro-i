@@ -42,7 +42,6 @@ class GPXFile:
         track_segments = track_root.findall(self.tag("trkseg"))
 
         for i in range(len(track_segments)):
-            #print("track_segments number: {}, segment: {}".format(i, track_segments[i]))
             segRows = []
             track_segment = track_segments[i]
             for trkpt in track_segment:
