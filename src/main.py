@@ -13,7 +13,7 @@ gpx_file_list = os.listdir(gpx_folder)
 
 # Creating empty DataFrame list
 ssDF_list = []
-
+ride_index = 1
 for i in range(len(gpx_file_list)):
     gpxFile = GPXFile(os.path.join(gpx_folder, gpx_file_list[i]))
     print(f"Analyzing: {gpx_file_list[i]}")
@@ -25,6 +25,9 @@ for i in range(len(gpx_file_list)):
     else:
         # Calculating all DataFrames.
         gpxDF, grDF, ssDF = all_operations(gpxDF)
+        # Adding ride index to first row of DataFrame.
+        ssDF.insert(0, 'ride_index', pd.Series([ride_index for x in range(len(ssDF.index))]))
+        ride_index = ride_index + 1
         # Every ssDF DataFrame is going to append to a list
         ssDF_list.append(ssDF)
         print("Analysis finished succesfully.")
@@ -37,7 +40,7 @@ output_folder = os.path.abspath("output")
 
 # Writing Single Slope DataFrame to a CSV file. Exporting to ..\Documents\\GitHub\\iuc-mak-pro-i\\output
 ssDF_csv.to_csv(os.path.join(
-    output_folder, r'single_slope_dataframe.csv'), encoding='utf-8')
+    output_folder, r'single_slope_dataframe.csv'), encoding='utf-8', index=False)
 
 # TODO try catch yapılanması (zaman olmayan GPX dosyaları için) - balaban turu
 # TODO visualizing scriptinin düzenlenmesi. son csv dosyasının dünya haritasında işlenmesi

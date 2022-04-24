@@ -178,9 +178,13 @@ def listing_single_slopes(df):
         elevation_change = df.iloc[indexes[i+1]
                                    ]['cumElevation'] - df.iloc[indexes[i]]['cumElevation']
         elevation = df.iloc[indexes[i]]['ele']
-        time_since_start = df.iloc[indexes[i]]['cumTime']
-        time_elapsed = df.iloc[indexes[i+1]]['cumTime'] - \
-            df.iloc[indexes[i]]['cumTime']
+        if i == 0:
+            time_since_start = 0
+            time_elapsed = df.iloc[indexes[i+1]]['cumTime']
+        else:
+            time_since_start = df.iloc[indexes[i]]['cumTime']
+            time_elapsed = df.iloc[indexes[i+1]]['cumTime'] - \
+                df.iloc[indexes[i]]['cumTime']
     # Save results
         single_slopes.append({
             'start_lat': start_lat,
