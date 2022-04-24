@@ -9,11 +9,25 @@ class GPXFile:
         self.gpx_file_path = gpx_file_path
         self.xml_element_prefix = gpx_schema_doc_site
         self.gpx_root = self.get_gpx_root(self.gpx_file_path)
-        
-        self.gpxColumns = ["lat", "lon", "ele", "time"]
-        self.gpxDF = pd.DataFrame(columns = self.gpxColumns)
+        if self.check_for_time() is True:
 
-        self.parse()
+            self.gpxColumns = ["lat", "lon", "ele", "time"]
+            self.gpxDF = pd.DataFrame(columns=self.gpxColumns)
+
+            self.parse()
+        else:
+            self.gpxDF = pd.DataFrame({'Empty': []})
+
+    def check_for_time(self):
+        track_root = self.gpx_root.find(self.tag("trk"))
+        track_segments = track_root.findall(self.tag("trkseg"))
+        track_segment = track_segments[0]
+        trkpt = track_segment.find(self.tag("trkpt"))
+        time_value = trkpt.find(self.tag('time'))
+        if time_value is None:
+            return False
+        else:
+            return True
 
     def get_gpx_root(self, gpx_file_path):
         tree = ET.parse(gpx_file_path)
@@ -50,9 +64,3 @@ class GPXFile:
     def print_info(self):
         self.gpxDF.info()
         print("preview:\n", self.gpxDF[:10])
-
-if __name__=="__main__":
-    #parse_gpx()
-    gpx_file_path = "20210808_181500_amtrak_dc_to_nyc.gpx"
-    gpx_file = GPXFile(gpx_file_path)
-    gpx_file.print_info()
