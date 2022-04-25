@@ -1,5 +1,4 @@
 import os
-
 from gpx_file_reader import GPXFile
 from visualization import *
 from math_calculations import *
@@ -7,7 +6,6 @@ from dataframe_operations import *
 
 # Directory: ..\Documents\\GitHub\\iuc-mak-pro-i\\gpx_files'
 gpx_folder = os.path.abspath("gpx_files")
-
 # All gpx files in the gpx_files folder.
 gpx_file_list = os.listdir(gpx_folder)
 
@@ -23,7 +21,7 @@ for i in range(len(gpx_file_list)):
     gpxDF = gpxFile.get_gpx_dataframe()
     if gpxDF.empty:
         print(
-            f"ERROR: This file dont have time component. This GPX file will not be processed: {gpx_file_list[i]}")
+            f"ERROR: This file dont have time information. This GPX file will not be processed: {gpx_file_list[i]}")
         no_time_info_file_list.append(gpx_file_list[i])
     else:
         # Calculating all DataFrames.
@@ -33,10 +31,17 @@ for i in range(len(gpx_file_list)):
         ride_index = ride_index + 1
         # Every ssDF DataFrame is going to append to a list
         ssDF_list.append(ssDF)
-        print("Analysis finished succesfully.")
+        print("Analysis for this file finished successfully.")
 
 # Debugging...
-print(f"These files were not processed because they do not contain time information: {no_time_info_file_list}")
+if not no_time_info_file_list:
+    print(f"All {len(gpx_file_list)} files processed successfully.")
+else:
+    print(f"Total number of files : {len(gpx_file_list)}")
+    print(f"Successfuly completed : {len(gpx_file_list)-len(no_time_info_file_list)}")
+    print(f"Error given           : {len(no_time_info_file_list)}")
+    print(f"ERROR: These files do not contain time information: {no_time_info_file_list}")
+
 
 # Combine all single slope dataframesss into one DataFrame.
 ssDF_csv = pd.concat(ssDF_list, ignore_index=True)

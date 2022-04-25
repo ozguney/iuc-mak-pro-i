@@ -8,12 +8,12 @@ ssDF = pd.read_csv(
     "C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\output\\single_slope_dataframe.csv")
 ssDF.head()
 
-# # ic ice girmis tek grafik
-# for i in range(len(ssDF[ssDF['time_since_start'] == 0])):
-#     fig = px.line(ssDF, x='time_since_start',
-#                   y='elevation', color='ride_index')
+# ic ice girmis tek grafik
+for i in range(len(ssDF[ssDF['time_since_start'] == 0])):
+    fig = px.line(ssDF, x='time_since_start',
+                  y='elevation', color='ride_index')
 
-# fig.show()
+fig.show()
 
 # sub plot ile olusturulmus grafik ortak x axis
 
