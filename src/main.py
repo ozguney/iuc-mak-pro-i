@@ -56,3 +56,6 @@ ssDF_csv.to_csv(os.path.join(
 
 # TODO visualizing scriptinin düzenlenmesi. son csv dosyasının dünya haritasında işlenmesi
 # TODO write scriptinin düzenlenmesi. içerisine html harita çıktılarının da eklenmesi.
+# TODO benzer eğimlerin gruplandırılması , distance_covered cumulative bilgisinin eklenmesi
+# TODO csv dosyasındaki columnların sıralamasının doğru şekilde yapılması
+# TODO grafik çizimi
