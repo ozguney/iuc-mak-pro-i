@@ -4,19 +4,20 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+
 ssDF = pd.read_csv(
     "C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\output\\single_slope_dataframe.csv")
 ssDF.head()
+
 
 # ic ice girmis tek grafik
 for i in range(len(ssDF[ssDF['time_since_start'] == 0])):
     fig = px.line(ssDF, x='time_since_start',
                   y='elevation', color='ride_index')
-
 fig.show()
 
-# sub plot ile olusturulmus grafik ortak x axis
 
+# sub plot ile olusturulmus grafik ortak x axis
 total_ride_count = ssDF['ride_index'].iloc[-1]
 
 fig = make_subplots(rows=int(total_ride_count), cols=1)

@@ -15,6 +15,7 @@ ssDF_list, no_time_info_file_list = [], []
 # Ride index used to index each file in ssDF.
 ride_index = 1
 
+# Processing every GPX files in the gpx_files directory.
 for i in range(len(gpx_file_list)):
     gpxFile = GPXFile(os.path.join(gpx_folder, gpx_file_list[i]))
     print(f"Analyzing: {gpx_file_list[i]}")
