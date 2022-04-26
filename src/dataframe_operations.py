@@ -29,20 +29,24 @@ def delta_dist_meters(df):
 
 
 def drop_zero_meter_displacements(df):
-    # Deleting 0 meter rows
+    # Deleting 0 meter rows, not touching first row.
     df = df[df.deltaDistMeters != 0]
+    df.loc[0,["deltaDistMeters"]] = 0 
     # Resetting index values due to deleting 0 second rows
     df = df.reset_index(drop=True)
     return df
 
 
 def delta_time_sec(df):
+    # Returns time as a float(maybe integer but not as a time. eg: 65, not 1m5s)
     df["deltaTimeSeconds"] = (df.loc[1:, 'time'] - df['time'].shift()).apply(lambda row: row.total_seconds())
+    df.loc[0,["deltaTimeSeconds"]] = 0 
     return df
 
 
 def delta_ele_meters(df):
     df["deltaElevationMeters"] = df["ele"].diff()
+    df.loc[0,["deltaElevationMeters"]] = 0 
     return df
 
 
@@ -53,15 +57,13 @@ def cumulative_time(df):
 
 def velocity_kph(df):
     df["velocityKmPerHour"] = df["deltaDistMeters"] / df["deltaTimeSeconds"] * (3600.0 / 1000)
-    df = df[df.velocityKmPerHour < 50]
-    df = df.reset_index(drop=True)
     return df
 
 
-def velocity_kph_moving_average(df):
-    df["velocityKmPerHour_ma100"] = df["velocityKmPerHour"].rolling(window=100).mean()
-    df["velocityKmPerHour_ma20"] = df["velocityKmPerHour"].rolling(window=20).mean()
-    return df
+# def velocity_kph_moving_average(df):
+#     df["velocityKmPerHour_ma100"] = df["velocityKmPerHour"].rolling(window=100).mean()
+#     df["velocityKmPerHour_ma20"] = df["velocityKmPerHour"].rolling(window=20).mean()
+#     return df
 
 
 def local_min_max(df):
@@ -166,7 +168,8 @@ def listing_single_slopes(df):
         start_lon = df.iloc[indexes[i]]['lon']
         end_lat = df.iloc[indexes[i+1]]['lat']
         end_lon = df.iloc[indexes[i+1]]['lon']
-        distance_covered = df.iloc[indexes[i+1]]['cumDistance'] - df.iloc[indexes[i]]['cumDistance']
+        distance_covered = df.iloc[:indexes[i+1]]['deltaDistMeters'].sum() - df.iloc[:indexes[i]]['deltaDistMeters'].sum()
+        distance_since_start = df.iloc[:indexes[i+1]]['deltaDistMeters'].sum()
         elevation_change = df.iloc[indexes[i+1]]['cumElevation'] - df.iloc[indexes[i]]['cumElevation']
         elevation = df.iloc[indexes[i]]['ele']
 
@@ -189,6 +192,7 @@ def listing_single_slopes(df):
             'end_lat': end_lat,
             'end_lon': end_lon,
             'distance_covered': distance_covered,
+            'distance_since_start': distance_since_start,
             'elevation_change': elevation_change,
             'elevation': elevation,
             'time_since_start': time_since_start,
@@ -223,7 +227,7 @@ def all_operations(df):
     gpxDF = cumulative_distance(gpxDF)
     gpxDF = calculate_gradients(gpxDF)
     gpxDF = tag_gradient_ranges(gpxDF)
-    gpxDF = velocity_kph_moving_average(gpxDF)
+    # gpxDF = velocity_kph_moving_average(gpxDF)
     grDF = gradient_details(gpxDF)
     ssDF = listing_single_slopes(gpxDF)
 
