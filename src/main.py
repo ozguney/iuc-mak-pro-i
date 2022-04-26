@@ -61,3 +61,4 @@ gpxDF.to_csv(os.path.join(
 # TODO benzer eğimlerin gruplandırılması , distance_covered cumulative bilgisinin eklenmesi
 # TODO csv dosyasındaki columnların sıralamasının doğru şekilde yapılması
 # TODO grafik çizimi
+# TODO ilk değer min max noktası olmazsa birinci eğim için delta time fazla çıkabilir.

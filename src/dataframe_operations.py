@@ -39,14 +39,15 @@ def drop_zero_meter_displacements(df):
 def delta_time_sec(df):
     # Returns time as a float(maybe integer but not as a time. eg: 65, not 1m5s)
     df["deltaTimeSeconds"] = (df.loc[1:, 'time'] - df['time'].shift()).apply(lambda row: row.total_seconds())
-    df.loc[0,["deltaTimeSeconds"]] = 0
-    df.loc[0,["deltaDistMeters"]] = 0 # This is here, due to: "A value is trying to be set on a copy of a slice from a DataFrame. Try using .loc[row_indexer,col_indexer] = value instead"
+    df.loc[0, ["deltaTimeSeconds"]] = 0
+    # This is here, due to: "A value is trying to be set on a copy of a slice from a DataFrame. Try using .loc[row_indexer,col_indexer] = value instead"
+    df.loc[0, ["deltaDistMeters"]] = 0
     return df
 
 
 def delta_ele_meters(df):
     df["deltaElevationMeters"] = df["ele"].diff()
-    df.loc[0,["deltaElevationMeters"]] = 0 
+    df.loc[0, ["deltaElevationMeters"]] = 0
     return df
 
 
@@ -57,7 +58,7 @@ def cumulative_time(df):
 
 def velocity_kph(df):
     df["velocityKmPerHour"] = df["deltaDistMeters"] / df["deltaTimeSeconds"] * (3600.0 / 1000)
-    df.loc[0,["velocityKmPerHour"]] = 0
+    df.loc[0, ["velocityKmPerHour"]] = 0
     return df
 
 
@@ -169,7 +170,8 @@ def listing_single_slopes(df):
         start_lon = df.iloc[indexes[i]]['lon']
         end_lat = df.iloc[indexes[i+1]]['lat']
         end_lon = df.iloc[indexes[i+1]]['lon']
-        distance_covered = df.iloc[:indexes[i+1]]['deltaDistMeters'].sum() - df.iloc[:indexes[i]]['deltaDistMeters'].sum()
+        distance_covered = df.iloc[:indexes[i+1]]['deltaDistMeters'].sum() - df.iloc[:indexes[i]
+                                                                                     ]['deltaDistMeters'].sum()
         distance_since_start = df.iloc[:indexes[i+1]]['deltaDistMeters'].sum()
         elevation_change = df.iloc[indexes[i+1]]['cumElevation'] - df.iloc[indexes[i]]['cumElevation']
         elevation = df.iloc[indexes[i]]['ele']
@@ -180,11 +182,11 @@ def listing_single_slopes(df):
         elevation_lost = df.iloc[indexes[i]:indexes[i+1]][df['deltaElevationMeters'] < 0]['deltaElevationMeters'].sum()
         if i == 0:
             time_since_start = 0
-            time_elapsed = df.iloc[indexes[i+1]]['cumTime']
         else:
-            time_since_start = df.iloc[indexes[i]]['cumTime']
-            time_elapsed = df.iloc[indexes[i+1]]['cumTime'] - df.iloc[indexes[i]]['cumTime']
+            time_since_start = df.iloc[indexes[0]:indexes[i]]['deltaTimeSeconds'].sum()
+        time_elapsed = df.iloc[indexes[i]:indexes[i+1]]['deltaTimeSeconds'].sum()
         avg_velocity_kmh = (distance_covered/time_elapsed) * (3600.0 / 1000)
+        
 
     # Save results
         single_slopes.append({
@@ -192,16 +194,16 @@ def listing_single_slopes(df):
             'start_lon': start_lon,
             'end_lat': end_lat,
             'end_lon': end_lon,
-            'distance_covered': distance_covered,
-            'distance_since_start': distance_since_start,
-            'elevation_change': elevation_change,
+            'distance_covered': np.round(distance_covered, 2),
+            'distance_since_start': np.round(distance_since_start, 2),
+            'elevation_change': np.round(elevation_change, 2),
             'elevation': elevation,
             'time_since_start': time_since_start,
             'time_elapsed': time_elapsed,
-            'pct_of_total_ride': pct_of_total_ride,
-            'elevation_gain': elevation_gain,
-            'elevation_lost': elevation_lost,
-            'avg_velocity_kmh': avg_velocity_kmh
+            'pct_of_total_ride': np.round(pct_of_total_ride, 2),
+            'elevation_gain': np.round(elevation_gain, 2),
+            'elevation_lost': np.round(np.abs(elevation_lost), 2),
+            'avg_velocity_kmh': np.round(avg_velocity_kmh, 2)
         })
     ss_df = pd.DataFrame(single_slopes)
     # This function returns every single slope group's dataframe as a list with their information.
