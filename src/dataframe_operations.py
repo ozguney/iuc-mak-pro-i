@@ -31,7 +31,6 @@ def delta_dist_meters(df):
 def drop_zero_meter_displacements(df):
     # Deleting 0 meter rows, not touching first row.
     df = df[df.deltaDistMeters != 0]
-    df.loc[0,["deltaDistMeters"]] = 0 
     # Resetting index values due to deleting 0 second rows
     df = df.reset_index(drop=True)
     return df
@@ -40,7 +39,8 @@ def drop_zero_meter_displacements(df):
 def delta_time_sec(df):
     # Returns time as a float(maybe integer but not as a time. eg: 65, not 1m5s)
     df["deltaTimeSeconds"] = (df.loc[1:, 'time'] - df['time'].shift()).apply(lambda row: row.total_seconds())
-    df.loc[0,["deltaTimeSeconds"]] = 0 
+    df.loc[0,["deltaTimeSeconds"]] = 0
+    df.loc[0,["deltaDistMeters"]] = 0 # This is here, due to: "A value is trying to be set on a copy of a slice from a DataFrame. Try using .loc[row_indexer,col_indexer] = value instead"
     return df
 
 
@@ -57,13 +57,14 @@ def cumulative_time(df):
 
 def velocity_kph(df):
     df["velocityKmPerHour"] = df["deltaDistMeters"] / df["deltaTimeSeconds"] * (3600.0 / 1000)
+    df.loc[0,["velocityKmPerHour"]] = 0
     return df
 
 
-# def velocity_kph_moving_average(df):
-#     df["velocityKmPerHour_ma100"] = df["velocityKmPerHour"].rolling(window=100).mean()
-#     df["velocityKmPerHour_ma20"] = df["velocityKmPerHour"].rolling(window=20).mean()
-#     return df
+def velocity_kph_moving_average(df):
+    df["velocityKmPerHour_ma100"] = df["velocityKmPerHour"].rolling(window=100).mean()
+    df["velocityKmPerHour_ma20"] = df["velocityKmPerHour"].rolling(window=20).mean()
+    return df
 
 
 def local_min_max(df):
@@ -156,7 +157,7 @@ def listing_single_slopes(df):
     # Min, max values parsed.
     df_dumpmin = df.dropna(subset=['min'])
     df_dumpmax = df.dropna(subset=['max'])
-    # All min, max values's indexes added to "indexes" variable.
+    # All min, max values's indexes added to "indexes" array.
     indexes = df_dumpmin.index.tolist() + df_dumpmax.index.tolist()
     # Indexes sorted in ascending order.
     indexes.sort()
