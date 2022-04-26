@@ -53,6 +53,8 @@ output_folder = os.path.abspath("output")
 # Writing Single Slope DataFrame to a CSV file. Exporting to ..\Documents\\GitHub\\iuc-mak-pro-i\\output
 ssDF_csv.to_csv(os.path.join(
     output_folder, r'single_slope_dataframe.csv'), encoding='utf-8', index=False)
+gpxDF.to_csv(os.path.join(
+    output_folder, r'gpx_dataframe.csv'), encoding='utf-8', index=False)
 
 # TODO visualizing scriptinin düzenlenmesi. son csv dosyasının dünya haritasında işlenmesi
 # TODO write scriptinin düzenlenmesi. içerisine html harita çıktılarının da eklenmesi.
