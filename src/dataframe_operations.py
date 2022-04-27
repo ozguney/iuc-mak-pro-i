@@ -163,6 +163,7 @@ def listing_single_slopes(df):
     # Indexes sorted in ascending order.
     indexes.sort()
     single_slopes = []
+    total_climb_since_start = 0
 
     # Statistics
     for i in range(len(indexes)-1):
@@ -175,10 +176,10 @@ def listing_single_slopes(df):
         distance_since_start = df.iloc[:indexes[i+1]]['deltaDistMeters'].sum()
         elevation_change = df.iloc[indexes[i+1]]['cumElevation'] - df.iloc[indexes[i]]['cumElevation']
         elevation = df.iloc[indexes[i]]['ele']
-
         pct_of_total_ride = (df['deltaDistMeters'].iloc[indexes[i]:indexes[i+1]
                                                         ].sum() / df['deltaDistMeters'].sum()) * 100
         elevation_gain = df.iloc[indexes[i]:indexes[i+1]][df['deltaElevationMeters'] > 0]['deltaElevationMeters'].sum()
+        total_climb_since_start += elevation_gain
         elevation_lost = df.iloc[indexes[i]:indexes[i+1]][df['deltaElevationMeters'] < 0]['deltaElevationMeters'].sum()
         if i == 0:
             time_since_start = 0
@@ -186,7 +187,14 @@ def listing_single_slopes(df):
             time_since_start = df.iloc[indexes[0]:indexes[i]]['deltaTimeSeconds'].sum()
         time_elapsed = df.iloc[indexes[i]:indexes[i+1]]['deltaTimeSeconds'].sum()
         avg_velocity_kmh = (distance_covered/time_elapsed) * (3600.0 / 1000)
-        
+        if elevation_change < 0:
+            slope_percentage = (elevation_lost/distance_covered)*100
+            if -1 < slope_percentage < 0:  # Getting rid of -0.00
+                slope_percentage = 0
+        elif elevation_change > 0:
+            slope_percentage = (elevation_gain/distance_covered)*100
+        else:  # Slope change = 0
+            slope_percentage = 0
 
     # Save results
         single_slopes.append({
@@ -203,7 +211,9 @@ def listing_single_slopes(df):
             'pct_of_total_ride': np.round(pct_of_total_ride, 2),
             'elevation_gain': np.round(elevation_gain, 2),
             'elevation_lost': np.round(np.abs(elevation_lost), 2),
-            'avg_velocity_kmh': np.round(avg_velocity_kmh, 2)
+            'avg_velocity_kmh': np.round(avg_velocity_kmh, 2),
+            'slope_percentage': np.around(slope_percentage),
+            'total_climb_since_start': np.round(total_climb_since_start, 2)
         })
     ss_df = pd.DataFrame(single_slopes)
     # This function returns every single slope group's dataframe as a list with their information.
