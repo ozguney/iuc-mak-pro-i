@@ -53,30 +53,30 @@ fig = px.scatter(
     animation_group="ride_index",
     color="distance_since_start",
     size='total_climb_since_start',
-    size_max=55,
-    range_x=[0, 50000],
-    range_y=[-2, 40],
-    range_color=(-8, 8),
-    template='ggplot2'
-    )
-
+    size_max=50,
+    range_x=[-2000, 50000],
+    range_y=[-3, 60],
+    range_color=(0, 70000),
+    template='ggplot2',
+    color_continuous_scale=px.colors.sequential.Inferno
+)
 fig["layout"].pop("updatemenus")  # optional, drop animation buttons
+# fig.show()
 
-
-fig.show()
+# toplu gösterim
 
 fig = px.scatter(
     ssDF, x="time_since_start", y="avg_velocity_kmh",
     animation_group="ride_index",
     color="slope_percentage",
-    size='total_climb_since_start',
-    size_max=55,
-    range_x=[0, 50000],
-    range_y=[-2, 40],
+    size='distance_covered',
+    size_max=60,
+    range_x=[-2000, 50000],
+    range_y=[-3, 60],
     range_color=(-6, 6),
     template='ggplot2',
     color_continuous_scale=px.colors.sequential.Inferno
-    )
+)
 
 fig["layout"].pop("updatemenus")  # optional, drop animation buttons
 

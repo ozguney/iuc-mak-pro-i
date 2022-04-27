@@ -173,7 +173,7 @@ def listing_single_slopes(df):
         end_lon = df.iloc[indexes[i+1]]['lon']
         distance_covered = df.iloc[:indexes[i+1]]['deltaDistMeters'].sum() - df.iloc[:indexes[i]
                                                                                      ]['deltaDistMeters'].sum()
-        distance_since_start = df.iloc[:indexes[i+1]]['deltaDistMeters'].sum()
+        distance_since_start = df.iloc[:indexes[i]]['deltaDistMeters'].sum()
         elevation_change = df.iloc[indexes[i+1]]['cumElevation'] - df.iloc[indexes[i]]['cumElevation']
         elevation = df.iloc[indexes[i]]['ele']
         pct_of_total_ride = (df['deltaDistMeters'].iloc[indexes[i]:indexes[i+1]
