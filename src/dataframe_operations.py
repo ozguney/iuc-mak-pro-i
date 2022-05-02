@@ -195,7 +195,11 @@ def listing_single_slopes(df):
             slope_percentage = (elevation_gain/distance_covered)*100
         else:  # Slope change = 0
             slope_percentage = 0
-
+        all_time_avg_kmh = (df["cumDistance"].iloc[-1] / df["cumTime"].iloc[-1]) * (3600.0 / 1000)
+        if avg_velocity_kmh<2:
+            is_he_resting = True
+        else:
+            is_he_resting = False
     # Save results
         single_slopes.append({
             'start_lat': start_lat,
@@ -213,7 +217,9 @@ def listing_single_slopes(df):
             'elevation_lost': np.round(np.abs(elevation_lost), 2),
             'avg_velocity_kmh': np.round(avg_velocity_kmh, 2),
             'slope_percentage': np.around(slope_percentage),
-            'total_climb_since_start': np.round(total_climb_since_start, 2)
+            'total_climb_since_start': np.round(total_climb_since_start, 2),
+            'all_time_avg_kmh' : np.round(all_time_avg_kmh, 2),
+            'is_he_resting' : is_he_resting
         })
     ss_df = pd.DataFrame(single_slopes)
     # This function returns every single slope group's dataframe as a list with their information.
