@@ -196,7 +196,7 @@ def listing_single_slopes(df):
         else:  # Slope change = 0
             slope_percentage = 0
         all_time_avg_kmh = (df["cumDistance"].iloc[-1] / df["cumTime"].iloc[-1]) * (3600.0 / 1000)
-        if avg_velocity_kmh<2:
+        if avg_velocity_kmh<3.6:
             is_he_resting = True
         else:
             is_he_resting = False
