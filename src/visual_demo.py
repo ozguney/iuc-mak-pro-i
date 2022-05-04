@@ -1,4 +1,3 @@
-import math
 import pandas as pd
 import numpy as np
 import plotly.express as px
@@ -12,8 +11,10 @@ ssDF = pd.read_csv(
     "C:\\Users\\OZGUN\\Documents\\GitHub\\iuc-mak-pro-i\\output\\single_slope_dataframe.csv")
 ssDF.head()
 
-# her verinin bir birine göre grafigi
-# a = sns.pairplot(ssDF.iloc[:100], hue='ride_index')
+# # her verinin bir birine göre grafigi
+
+# snsSSDF = ssDF[['ride_index','distance_since_start','time_since_start','elevation_gain','avg_velocity_kmh','slope_percentage','total_climb_since_start']]
+# a = sns.pairplot(snsSSDF, hue='ride_index')
 # plt.show()
 
 # # ic ice girmis tek grafik
@@ -43,29 +44,29 @@ ssDF.head()
 # #fig.update_layout(height=600, width=600, title_text="Stacked Subplots")
 # fig.show()
 
-# slider menu
-hover_text = []
-bubble_size = []
+# # slider menu
+# hover_text = []
+# bubble_size = []
 
-ssDF = ssDF.sort_values('slope_percentage')
-ssDF = ssDF[ssDF['distance_covered'] != 0]
-ssDF = ssDF.reset_index(drop=True)
+# ssDF = ssDF.sort_values('slope_percentage')
+# ssDF = ssDF[ssDF['distance_covered'] != 0]
+# ssDF = ssDF.reset_index(drop=True)
 
-fig = px.scatter(
-    ssDF, x="time_since_start", y="avg_velocity_kmh",
-    animation_frame="slope_percentage",
-    animation_group="ride_index",
-    color="distance_since_start",
-    size='total_climb_since_start',
-    size_max=50,
-    range_x=[-2000, 50000],
-    range_y=[-3, 60],
-    range_color=(0, 70000),
-    template='ggplot2',
-    color_continuous_scale=px.colors.sequential.Inferno
-)
-fig["layout"].pop("updatemenus")  # optional, drop animation buttons
-fig.show()
+# fig = px.scatter(
+#     ssDF, x="time_since_start", y="avg_velocity_kmh",
+#     animation_frame="slope_percentage",
+#     animation_group="ride_index",
+#     color="distance_since_start",
+#     size='total_climb_since_start',
+#     size_max=50,
+#     range_x=[-2000, 50000],
+#     range_y=[-3, 60],
+#     range_color=(0, 70000),
+#     template='ggplot2',
+#     color_continuous_scale=px.colors.sequential.Inferno
+# )
+# fig["layout"].pop("updatemenus")  # optional, drop animation buttons
+# fig.show()
 
 # # toplu gösterim
 
@@ -94,4 +95,8 @@ fig.show()
 # fig.show()
 
 
-
+# # bar gösterimi, slope ile hız karşılaştırması
+# ssDF_filtered = ssDF.loc[(ssDF.slope_percentage >= -6) & (ssDF.slope_percentage <= 6)]
+# ssDF_filtered.reset_index(drop=True)
+# fig = px.bar(ssDF_filtered.groupby(['slope_percentage']).mean().reset_index(), x='slope_percentage', y='avg_velocity_kmh')
+# fig.show()
