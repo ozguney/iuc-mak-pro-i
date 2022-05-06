@@ -178,12 +178,13 @@ def listing_single_slopes(df):
         pct_of_total_ride = (df['deltaDistMeters'].iloc[indexes[i]:indexes[i+1]
                                                         ].sum() / df['deltaDistMeters'].sum()) * 100
         elevation_gain = df.iloc[indexes[i]:indexes[i+1]][df['deltaElevationMeters'] > 0]['deltaElevationMeters'].sum()
-        total_climb_since_start += elevation_gain
         elevation_lost = df.iloc[indexes[i]:indexes[i+1]][df['deltaElevationMeters'] < 0]['deltaElevationMeters'].sum()
         if i == 0:
             time_since_start = 0
+            total_climb_since_start = 0
         else:
             time_since_start = df.iloc[indexes[0]:indexes[i]]['deltaTimeSeconds'].sum()
+            total_climb_since_start += elevation_gain
         time_elapsed = df.iloc[indexes[i]:indexes[i+1]]['deltaTimeSeconds'].sum()
         avg_velocity_kmh = (distance_covered/time_elapsed) * (3600.0 / 1000)
         if elevation_change < 0:
