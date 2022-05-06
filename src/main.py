@@ -61,3 +61,4 @@ gpxDF.to_csv(os.path.join(
 # TODO benzer eğimlerin gruplandırılması , distance_covered cumulative bilgisinin eklenmesi
 # TODO csv dosyasındaki columnların sıralamasının doğru şekilde yapılması
 # TODO grafik çizimi
+# TODO droplanmış distance değerlerini default bi değerle çarpmak
