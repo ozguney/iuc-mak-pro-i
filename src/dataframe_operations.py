@@ -1,4 +1,3 @@
-from datetime import datetime
 from numpy import datetime64
 import pandas as pd
 from math_calculations import *
@@ -189,7 +188,7 @@ def listing_single_slopes(df):
         avg_velocity_kmh = (distance_covered/time_elapsed) * (3600.0 / 1000)
         if elevation_change < 0:
             slope_percentage = (elevation_lost/distance_covered)*100
-            if -1 < slope_percentage < 0:  # Getting rid of -0.00
+            if -0.51 < slope_percentage < 0:  # Getting rid of -0.00
                 slope_percentage = 0
         elif elevation_change > 0:
             slope_percentage = (elevation_gain/distance_covered)*100
