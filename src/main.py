@@ -62,3 +62,5 @@ gpxDF.to_csv(os.path.join(
 # TODO csv dosyasındaki columnların sıralamasının doğru şekilde yapılması
 # TODO grafik çizimi
 # TODO droplanmış distance değerlerini default bi değerle çarpmak
+
+# 2020 nisan 26 öncesi ve sonrası
